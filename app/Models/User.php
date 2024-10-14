@@ -45,4 +45,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function room()
+    {
+        return $this->belongsToMany(Room::class)->withTimestamps();
+    }
 }
