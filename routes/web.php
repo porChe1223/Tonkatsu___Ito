@@ -27,5 +27,6 @@ Route::middleware('auth')->group(function () {
 Route::get('/dashboard', [RoomController::class, 'dashboard'])->name('dashboard');
 Route::post('/matching', [RoomController::class, 'joinRoom'])->name('matching');
 Route::get('/games/gameroom/{room}', [RoomController::class, 'gameRoom'])->name('games.gameroom');
+Route::get('/check-room-status/{room}', [RoomController::class, 'checkRoomStatus']);
 
 require __DIR__.'/auth.php';

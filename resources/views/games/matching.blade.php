@@ -14,8 +14,20 @@
     </div>
     <script>
         setInterval(function(){
-            location.reload();
-        }, 5000); // 5秒ごとにリロード
+            // サーバーに部屋の状態を確認するリクエストを送る
+            fetch('/check-room-status/{{ $room->id }}')
+                .then(response => response.json())
+                .then(data => {
+                    // 部屋が満員かどうかを確認
+                    if (data.isFull) {
+                        // 部屋が満員になったらプレイ画面にリダイレクト
+                        window.location.href = '/games/gameroom/{{ $room->id }}';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching room status:', error);
+                });
+        }, 5000); // 5秒ごとにサーバーの状態を確認
     </script>
 </body>
 </html>

@@ -47,6 +47,17 @@ class RoomController extends Controller
         return view('games.gameroom', ['room' => $room]);
     }
 
+    // 部屋の状態を確認するAPI
+    public function checkRoomStatus($roomId)
+    {
+        $room = Room::find($roomId);
+
+        // 参加者が2人以上いるかどうかを確認
+        $isFull = $room->participants()->count() == 2;
+
+        return response()->json(['isFull' => $isFull]);
+    }
+
     /**
      * Display a listing of the resource.
      */
