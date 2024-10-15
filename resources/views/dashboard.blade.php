@@ -9,7 +9,9 @@
 <body>
     <div class="container">
         <h1>Ito</h1>
-        <a href="" class="btn btn-primary">ゲーム開始</a>
+        <form action="{{route('MatchingPage')}}" method="GET">
+            <button type="submit">ゲーム開始</button>
+        </form>
     </div>
 </body>
 </html>
