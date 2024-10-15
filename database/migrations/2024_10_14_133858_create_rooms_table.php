@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('rooms', function (Blueprint $table) {
             $table->id();
+            $table->string('status')->default('waiting'); // 初期状態は待機
+            $table->integer('player_count')->default(0);  // 初期の参加者数は0
             $table->timestamps();
         });
     }

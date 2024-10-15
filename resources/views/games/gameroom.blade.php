@@ -8,14 +8,6 @@
     <link rel="stylesheet" href="{{ asset('css/matching.css') }}">
 </head>
 <body>
-    <div class="container">
-        <h1>マッチング中...</h1>
-        <p>他の参加者を待っています...</p>
-    </div>
-    <script>
-        setInterval(function(){
-            location.reload();
-        }, 5000); // 5秒ごとにリロード
-    </script>
+    <h1>gameroom</h1>
 </body>
 </html>
