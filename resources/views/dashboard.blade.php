@@ -9,7 +9,7 @@
 <body>
     <div class="container">
         <h1>Ito</h1>
-        <form action="{{route('MatchingPage')}}" method="GET">
+        <form action="{{route('GameRoom')}}" method="GET">
             <button type="submit">ゲーム開始</button>
         </form>
     </div>

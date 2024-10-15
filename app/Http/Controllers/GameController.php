@@ -63,10 +63,17 @@ class GameController extends Controller
         //
     }
 
-    public function choose()
+    public function chooseTheme()
     {
         //テーマをランダム選択
-        $theme = Theme::inRandomOrder()->first();
-        return view('games.gameroom', compact('themes'));
+        $choosedTheme = Theme::inRandomOrder()->first();
+        return view('games.gameroom', compact('choosedTheme'));
+    }
+
+    public function chooseCareNumber()
+    {
+        //テーマをランダム選択
+        $choosedCardNumber = rand(0, 100);
+        return view('games.gameroom', compact('choosedCardNumber'));
     }
 }
