@@ -1,4 +1,4 @@
-<!DOCKTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
@@ -8,9 +8,10 @@
 </head>
 <body>
     <div class="container">
-        <h1>Ito</h1>
-        <form action="{{route('MatchingPage')}}" method="GET">
-            <button type="submit">ゲーム開始</button>
+        <h1>ダッシュボード</h1>
+        <form action="{{ route('matching') }}" method="POST">
+            @csrf
+            <button type="submit" class="btn btn-primary">マッチングを開始</button>
         </form>
     </div>
 </body>

@@ -11,7 +11,6 @@
 <body>
     <div>
         <h1>結果</h1>
-    </div>
 </body>
 
 </html>
