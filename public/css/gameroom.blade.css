@@ -54,8 +54,49 @@
     margin: 24px;
 }
 
-#chat-room{
-    background-color: azure;
+#chat-container{
+    background-color: rgb(166, 225, 255);
     width: 80%;
-    margin: 48px;
+    margin: 24px;
+}
+
+#chat-left{
+    float: left;
+    background-color: white;
+    padding: 3px;
+    border-radius: 30px 30px 30px 0px;
+    margin: 12px;
+}
+
+#chat-right {
+    float: right;
+    background-color: rgb(131, 254, 48);
+    padding: 3px;
+    border-radius: 30px 30px 0px 30px;
+    margin: 12px;
+}
+
+.chat-text{
+    font-weight: bold;
+    padding: 6px;
+}
+
+.chat-clear{
+    clear: both;
+}
+
+#chat-send-container{
+    font-weight: bold;
+    height: 48px;
+    display: flex;
+}
+
+#chat-message-text{
+    font-weight: bold;
+    flex: 9;
+}
+
+#chat-message-send-button{
+    font-weight: bold;
+    flex: 1;
 }
