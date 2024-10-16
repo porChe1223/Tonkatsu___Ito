@@ -47,7 +47,10 @@
                 </div>
             </div> -->
 
-            <button type="submit" class="go-result-button">結果を見る</button>
+            <form action="{{ route('Result') }}" method="POST">
+                @csrf
+                <button type="submit" class="go-result-button">結果を見る</button>
+            </form>
             
         </div>
 
