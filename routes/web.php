@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RoomController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -28,5 +29,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/gameroom', [GameController::class, 'choose_Theme_CardNumber'])->name('games.choose_Theme_CardNumber');
 });
+
+// マッチング関係
+Route::get('/dashboard', [RoomController::class, 'dashboard'])->name('dashboard');
+Route::post('/matching', [RoomController::class, 'joinRoom'])->name('matching');
+Route::get('/games/gameroom/{room}', [RoomController::class, 'gameRoom'])->name('games.gameroom');
+Route::get('/check-room-status/{room}', [RoomController::class, 'checkRoomStatus']);
 
 require __DIR__.'/auth.php';
