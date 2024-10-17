@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('status')->default('waiting'); // 初期状態は待機
             $table->integer('player_count')->default(0);  // 初期の参加者数は0
+            $table->integer('theme_id')->nullable(); //各部屋にテーマを保存
             $table->timestamps();
         });
     }
