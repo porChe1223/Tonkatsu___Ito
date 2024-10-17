@@ -84,7 +84,15 @@ class GameController extends Controller
         //選ばれたカード番号をデータベースに保存
         $user->card_number = $choosed_CardNumber;
         $user->save();
-
         return view('games.gameroom', compact('user', 'choosed_Theme'));
+    }
+
+    //結果画面
+    public function showResult(){
+        // みんなのカード番号を取得
+        $usersCardNumbers = User::pluck('card_number')->toArray();
+        sort($usersCardNumbers);
+
+        return view('games.result', compact('usersCardNumbers'));
     }
 }

@@ -26,8 +26,9 @@ Route::get('/check-room-status/{room}', [GameController::class, 'checkRoomStatus
 //ゲーム画面
 Route::get('/gameroom', function () { return view('games.gameroom'); })->name('GameRoom'); //画面表示
 Route::get('/gameroom', [GameController::class, 'choose_Theme_CardNumber'])->name('games.choose_Theme_CardNumber'); //タイトルとカード番号のランダム選択
-Route::post('/gameroom', [GameController::class, 'goResult'])->name('Result'); //マッチング画面へ遷移
-Route::post('/result', function(){ return view('games.result'); })->name('Result'); //結果画面へ遷移
+Route::post('/result', [GameController::class,'showResult'])->name('Result'); //結果画面へ遷移
 
+//結果画面
+Route::get('/result', [GameController::class,'showResult'])->name('ShowResult');
 
 require __DIR__.'/auth.php';
