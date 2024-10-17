@@ -9,7 +9,10 @@
 
     <body>
         <div>
-            <h1>結果</h1>
+            <h1>答え</h1>
+            @foreach ($usersCardNumbers as $each_number)
+                {{$each_number}}
+            @endforeach
     </body>
 
 </html>
