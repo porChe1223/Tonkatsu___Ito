@@ -1,0 +1,102 @@
+#all-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 60px;
+}
+
+#instructions-container{
+    display: flex;
+    width: 70%;
+}
+
+#title-container{
+    flex: 7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#card_number-container{
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.instructions{
+    font-size: 36px;
+    font-weight: bold;
+}
+
+#theme{
+    flex: 7;
+    font-size: 36px;
+    font-weight: bold;
+    padding: 12px;
+    border-radius: 10px 10px 10px 10px;
+    background-color: rgb(97, 254, 215);
+    margin: 24px;
+}
+
+#card-number{
+    font-size: 96px;
+    font-weight: bold;
+    display: inline-block;
+    height: auto;
+    width: auto;
+    align-items: center;
+    border: 5px solid #000;
+    border-radius: 30px 30px 30px 30px;
+    margin: 24px;
+}
+
+#chat-container{
+    background-color: rgb(166, 225, 255);
+    width: 80%;
+    margin: 24px;
+}
+
+#chat-left{
+    float: left;
+    background-color: white;
+    padding: 3px;
+    border-radius: 30px 30px 30px 0px;
+    margin: 12px;
+}
+
+#chat-right {
+    float: right;
+    background-color: rgb(131, 254, 48);
+    padding: 3px;
+    border-radius: 30px 30px 0px 30px;
+    margin: 12px;
+}
+
+.chat-text{
+    font-weight: bold;
+    padding: 6px;
+}
+
+.chat-clear{
+    clear: both;
+}
+
+#chat-send-container{
+    font-weight: bold;
+    height: 48px;
+    display: flex;
+}
+
+#chat-message-text{
+    font-weight: bold;
+    flex: 9;
+}
+
+#chat-message-send-button{
+    font-weight: bold;
+    flex: 1;
+}
