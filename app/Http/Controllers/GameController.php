@@ -50,7 +50,6 @@ class GameController extends Controller
 
     public function choose_Theme_CardNumber(){
         // $room = Room::find(1);
-        $user = Auth::user();
 
         /* 
             テーマを一回のみ選択させる
@@ -70,8 +69,17 @@ class GameController extends Controller
 
         $choosed_Theme = Theme::inRandomOrder()->first();
 
-        //カード番号をランダム選択
-        $choosed_CardNumber = rand(0, 100);
+        //カード番号取得
+
+        $user = Auth::user();
+
+        // 使用済みのカード番号を取得
+        $usedCardNumbers = User::pluck('card_number')->toArray();
+
+        // 使用されていないカード番号を見つける
+        do {
+            $choosed_CardNumber = rand(0, 100);
+        } while (in_array($choosed_CardNumber, $usedCardNumbers));
 
         //選ばれたカード番号をデータベースに保存
         $user->card_number = $choosed_CardNumber;
