@@ -18,7 +18,7 @@
             <div id="title-container">
                 <div class="instructions">お題:</div>
                 <span id="theme">
-                    {{$choosed_Theme->theme}}
+                    {{$room->theme_id}}
                 </span>
             </div>
             <div id="card_number-container">
@@ -49,7 +49,7 @@
                 </div>
             </div> -->
 
-        <form action="{{ route('Result') }}" method="POST">
+        <form action="{{ route('goResultRoom') }}" method="POST">
             @csrf
             <button type="submit" class="go-result-button">結果を見る</button>
         </form>
