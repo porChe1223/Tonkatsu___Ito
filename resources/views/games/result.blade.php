@@ -11,9 +11,12 @@
 <body>
     <div>
         <h1>答え</h1>
+        <a href="{{ url('/dashboard') }}"><button type="submit" class="go-result-button">ダッシュボードに戻る</button></a>
+        <p>--1--</p>
         @foreach ($usersCardNumbers as $each_number)
-        <span class="card-number">{{$each_number}}</span>
+        <p class="card-number">{{$each_number}}</p>
         @endforeach
+        <p>--100--</p>
 </body>
 
 </html>
