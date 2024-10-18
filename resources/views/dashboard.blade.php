@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ito</title>
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/dashboard.blade.css') }}">
 </head>
 <body>
     <div class="container">
-        <h1>ダッシュボード</h1>
+        <h1>Ito</h1>
+        <p>自分の数字を言葉で表現しよう</p>
         <form action="{{ route('goMatchingRoom') }}" method="POST">
             @csrf
             <button type="submit" class="btn btn-primary">マッチングを開始</button>
