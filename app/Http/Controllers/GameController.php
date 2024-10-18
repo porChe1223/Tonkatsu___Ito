@@ -43,11 +43,11 @@ class GameController extends Controller
     public function gameRoom(Room $room, Theme $theme, User $user)
     {
         //お題選択
-        if(is_null($room->theme_id)){ //お題が決まっていなければ
+        if (is_null($room->theme_id)) { //お題が決まっていなければ
             $choosed_Theme = Theme::inRandomOrder()->first();  //お題のランダム選択
             $room->theme_id = $choosed_Theme->id;
             $room->save(); //DB更新
-        } else { 
+        } else {
             $choosed_Theme = Theme::find($room->theme_id); // roomsに入っているお題を取得
         }
 
@@ -62,8 +62,9 @@ class GameController extends Controller
 
         $user->card_number = $choosed_CardNumber; // 選ばれたカード番号をデータベースに保存
         $user->save();
-        
-        return view('games.gameroom', ['room' => $room, 'user' => $user, 'choosed_Theme' => $choosed_Theme]);    }
+
+        return view('games.gameroom', ['room' => $room, 'user' => $user, 'choosed_Theme' => $choosed_Theme]);
+    }
 
     
     

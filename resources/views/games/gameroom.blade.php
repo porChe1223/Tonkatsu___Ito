@@ -18,7 +18,7 @@
             <div id="title-container">
                 <div class="instructions">お題:</div>
                 <span id="theme">
-                    {{$room->theme_id}}
+                    {{$choosed_Theme->theme}}
                 </span>
             </div>
             <div id="card_number-container">
