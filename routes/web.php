@@ -20,12 +20,11 @@ Route::get('/dashboard', function () { return view('dashboard'); })->middleware(
 Route::post('/matching', [GameController::class, 'joinRoom'])->name('matching'); //マッチング画面へ遷移
 
 //マッチング画面
-Route::get('/games/gameroom/{room}', [GameController::class, 'gameRoom'])->name('games.gameroom'); //人数が揃えばゲーム画面へ遷移
+Route::get('/games/gameroom/{room}', [GameController::class, 'choose_Theme_CardNumber'])->name('games.gameroom'); //人数が揃えばゲーム画面へ遷移
 Route::get('/check-room-status/{room}', [GameController::class, 'checkRoomStatus']); //人数が揃わなければ待機
 
 //ゲーム画面
-Route::get('/gameroom', function () { return view('games.gameroom'); })->name('GameRoom'); //画面表示
-Route::get('/gameroom', [GameController::class, 'choose_Theme_CardNumber'])->name('games.choose_Theme_CardNumber'); //タイトルとカード番号のランダム選択
+Route::get('/gameroom/{room}', [GameController::class, 'choose_Theme_CardNumber'])->name('games.choose_Theme_CardNumber'); //タイトルとカード番号のランダム選択
 Route::post('/result', [GameController::class,'showResult'])->name('Result'); //結果画面へ遷移
 
 //結果画面

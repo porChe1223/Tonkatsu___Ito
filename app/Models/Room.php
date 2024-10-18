@@ -18,4 +18,16 @@ class Room extends Model
                     ->using(RoomUser::class)
                     ->withTimestamps();
     }
+
+    // プレイヤーとのリレーションを定義
+    public function players()
+    {
+        return $this->hasMany(User::class);
+    }
+
+    // プレイヤー数を返すメソッド
+    public function playerCount()
+    {
+        return $this->players()->count();
+    }
 }

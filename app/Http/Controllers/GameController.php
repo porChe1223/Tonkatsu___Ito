@@ -30,8 +30,10 @@ class GameController extends Controller
             'user_id' => Auth::id(),
         ]);
 
+        $player_count = $room->playerCount();
+
         // もし2人揃ったら、部屋のステータスを変更してgameroomにリダイレクト
-        if ($room->participants()->count() == 2) {
+        if ($player_count == 2) {
             $room->update(['status' => 'full']);
             return redirect()->route('games.gameroom', ['room' => $room->id]);
         }
@@ -43,18 +45,16 @@ class GameController extends Controller
     
 
     //ゲーム画面
-    // public function gameRoom(Room $room)
-    // {
-    //     return view('games.gameroom', ['room' => $room]);
-    // }
+    public function gameRoom(Room $room)
+    {
+        return view('games.gameroom', ['room' => $room]);
+    }
 
     public function choose_Theme_CardNumber(){
-        // $room = Room::find(1);
+        //開いている部屋を探す
+        $room = Room::find(1);
 
-        /* 
-            テーマを一回のみ選択させる
-        　　部屋ができないと検証できないためいったん隠す
-
+        //テーマを一回のみ選択させる
         if(is_null($room->theme_id)){ //テーマが選ばれていない（rooomsに入っていない）なら
             //テーマをランダム選択
             $choosed_Theme = Theme::inRandomOrder()->first();
@@ -64,10 +64,6 @@ class GameController extends Controller
             //roomsに入っているテーマを取得
             $choosed_Theme = Theme::find($room->theme_id);
         }
-
-        */
-
-        $choosed_Theme = Theme::inRandomOrder()->first();
 
         //カード番号取得
 
