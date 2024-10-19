@@ -89,10 +89,12 @@ class GameController extends Controller
 
     //結果画面
     public function showResult(){
-        // みんなのカード番号を取得
-        $usersCardNumbers = User::pluck('card_number')->toArray();
-        sort($usersCardNumbers);
+        // みんなのカード番号とそのユーザー情報を取得
+        // ルーム全員のカードナンバーに修正必要
+        $usersWithCards = User::select('name', 'card_number')
+            ->orderBy('card_number', 'asc') // カード番号でソート
+            ->get();
 
-        return view('games.result', compact('usersCardNumbers'));
+        return view('games.result', compact('usersWithCards'));
     }
 }

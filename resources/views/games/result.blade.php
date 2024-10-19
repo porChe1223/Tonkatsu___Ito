@@ -12,11 +12,22 @@
     <div>
         <h1>答え</h1>
         <a href="{{ url('/dashboard') }}"><button type="submit" class="go-result-button">ダッシュボードに戻る</button></a>
-        <p>--1--</p>
-        @foreach ($usersCardNumbers as $each_number)
-        <p class="card-number">{{$each_number}}</p>
-        @endforeach
-        <p>--100--</p>
-</body>
+        <table>
+        <thead>
+            <tr>
+                <th>名前</th>
+                <th>カード番号</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($usersWithCards as $user)
+                <tr class="card-number">
+                    <td>{{ $user->name }}</td>
+                    <td>{{ $user->card_number }}</td>
+                </tr>
+            @endforeach
+        </tdoby>
+    </table>
+</body> 
 
 </html>
