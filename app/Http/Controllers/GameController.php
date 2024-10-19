@@ -12,80 +12,62 @@ use Illuminate\Support\Facades\Auth;
 class GameController extends Controller
 {
     //マッチング画面
-    public function joinRoom()
+    public function joinRoom(Theme $theme, User $user)
     {
-        // 既存の空き部屋を探す
-        $room = Room::where('status', 'waiting')->first();
+        $room = Room::where('status', 'waiting')->first(); // 既存の空き部屋を探す
 
         if (!$room) {
-            // 新しい部屋を作成
-            $room = Room::create([
+            $room = Room::create([ // 新しい部屋を作成
                 'status' => 'waiting'
             ]);
         }
+        
+        $room->player_count += 1; //部屋のプレイヤーの増加
+        $room->save(); //DBに保存
 
-        // 部屋に参加者を追加
-        RoomUser::firstOrCreate([
+        RoomUser::firstOrCreate([ // 部屋に参加者を追加
             'room_id' => $room->id,
             'user_id' => Auth::id(),
         ]);
 
-        // もし2人揃ったら、部屋のステータスを変更してgameroomにリダイレクト
-        if ($room->participants()->count() == 2) {
-            $room->update(['status' => 'full']);
-            return redirect()->route('games.gameroom', ['room' => $room->id]);
+        //GameRoomへの遷移
+        if ($room->player_count >= 2) { //もし2人揃ったら
+            $room->update(['status' => 'full']); //部屋のステータスを変更
+            return redirect()->route('goGameRoom', ['room' => $room]); //gameroomに遷移・部屋番号を返す
         }
 
-        // 2人になるまで待機画面に移行
-        return view('games.matching', ['room' => $room]);
+        return view('games.matching', ['room' => $room]); // 2人になるまで待機画面に移行
     }
-    
-    
 
-    //ゲーム画面
-    // public function gameRoom(Room $room)
-    // {
-    //     return view('games.gameroom', ['room' => $room]);
-    // }
 
-    public function choose_Theme_CardNumber(){
-        // $room = Room::find(1);
-
-        /* 
-            テーマを一回のみ選択させる
-        　　部屋ができないと検証できないためいったん隠す
-
-        if(is_null($room->theme_id)){ //テーマが選ばれていない（rooomsに入っていない）なら
-            //テーマをランダム選択
-            $choosed_Theme = Theme::inRandomOrder()->first();
+    public function gameRoom(Room $room, Theme $theme, User $user)
+    {
+        //お題選択
+        if (is_null($room->theme_id)) { //お題が決まっていなければ
+            $choosed_Theme = Theme::inRandomOrder()->first();  //お題のランダム選択
             $room->theme_id = $choosed_Theme->id;
-            $room->save();
-        } else { // 既にテーマが決まっている場合
-            //roomsに入っているテーマを取得
-            $choosed_Theme = Theme::find($room->theme_id);
+            $room->save(); //DB更新
+        } else {
+            $choosed_Theme = Theme::find($room->theme_id); // roomsに入っているお題を取得
         }
 
-        */
-
-        $choosed_Theme = Theme::inRandomOrder()->first();
-
-        //カード番号取得
-
+        //カード番号選択
         $user = Auth::user();
 
-        // 使用済みのカード番号を取得
-        $usedCardNumbers = User::pluck('card_number')->toArray();
+        $usedCardNumbers = User::whereNotNull('card_number')->pluck('card_number')->toArray(); // 使用済みのカード番号を取得（NULLを除外）
 
-        // 使用されていないカード番号を見つける
-        do {
+        do { // 使用されていないカード番号を見つける
             $choosed_CardNumber = rand(0, 100);
         } while (in_array($choosed_CardNumber, $usedCardNumbers));
 
-        //選ばれたカード番号をデータベースに保存
-        $user->card_number = $choosed_CardNumber;
+        $user->card_number = $choosed_CardNumber; // 選ばれたカード番号をデータベースに保存
         $user->save();
-        return view('games.gameroom', compact('user', 'choosed_Theme'));
+
+        return view('games.gameroom', ['room' => $room, 'user' => $user, 'choosed_Theme' => $choosed_Theme]);
     }
+
+    
+    
 
     //結果画面
     public function showResult(){
@@ -96,5 +78,16 @@ class GameController extends Controller
             ->get();
 
         return view('games.result', compact('usersWithCards'));
+    }
+
+    // 部屋の状態を確認するAPI
+    public function checkRoomStatus($roomId)
+    {
+        $room = Room::find($roomId);
+
+        // 参加者が2人以上いるかどうかを確認
+        $isFull = $room->participants()->count() == 2;
+
+        return response()->json(['isFull' => $isFull]);
     }
 }
