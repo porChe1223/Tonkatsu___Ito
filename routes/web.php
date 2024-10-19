@@ -24,9 +24,6 @@ Route::get('/gameroom/{room}', [GameController::class, 'gameRoom'])->name('goGam
 Route::get('/check-room-status/{room}', [GameController::class, 'checkRoomStatus']); //人数を定期的に確認（揃わなければ待機）
 
 //ゲーム画面
-Route::post('/result', [GameController::class,'showResult'])->name('goResultRoom'); //結果画面へ遷移
-
-//結果画面
-Route::get('/result', [GameController::class,'showResult'])->name('ShowResult');
+Route::post('/result/{room}', [GameController::class,'showResult'])->name('goResultRoom'); //結果画面へ遷移
 
 require __DIR__.'/auth.php';

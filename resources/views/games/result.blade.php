@@ -20,13 +20,14 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($usersWithCards as $user)
+            <!-- 昇順に修正する -->
+            @foreach($participants as $participant)
                 <tr class="card-number">
-                    <td>{{ $user->name }}</td>
-                    <td>{{ $user->card_number }}</td>
+                    <td>{{ $participant->name }}</td>
+                    <td>{{ $participant->card_number }}</td>
                 </tr>
             @endforeach
-        </tdoby>
+        </tbody>
     </table>
 </body> 
 

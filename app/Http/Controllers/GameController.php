@@ -70,14 +70,16 @@ class GameController extends Controller
     
 
     //結果画面
-    public function showResult(){
+    public function showResult($room_id){
         // みんなのカード番号とそのユーザー情報を取得
         // ルーム全員のカードナンバーに修正必要
-        $usersWithCards = User::select('name', 'card_number')
-            ->orderBy('card_number', 'asc') // カード番号でソート
-            ->get();
+        $room = Room::findOrFail($room_id);
 
-        return view('games.result', compact('usersWithCards'));
+        // Roomモデル内のparticipantsを使用して参加者の一覧を取得
+        $participants = $room->participants;
+        
+
+        return view('games.result', compact('room','participants'));
     }
 
     // 部屋の状態を確認するAPI
