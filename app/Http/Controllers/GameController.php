@@ -29,10 +29,22 @@ class GameController extends Controller
             'room_id' => $room->id,
             'user_id' => Auth::id(),
         ]);
+        //カード番号選択
+        $user = Auth::user();
+
+        $usedCardNumbers = User::whereNotNull('card_number')->pluck('card_number')->toArray(); // 使用済みのカード番号を取得（NULLを除外）
+        
+        do { // 使用されていないカード番号を見つける
+            $choosed_CardNumber = rand(0, 100);
+           } while (in_array($choosed_CardNumber, $usedCardNumbers));
+
+        $user->card_number = $choosed_CardNumber; // 選ばれたカード番号をデータベースに保存
+        $user->save();
 
         //GameRoomへの遷移
         if ($room->player_count >= 2) { //もし2人揃ったら
             $room->update(['status' => 'full']); //部屋のステータスを変更
+            
             return redirect()->route('goGameRoom', ['room' => $room]); //gameroomに遷移・部屋番号を返す
         }
 
@@ -42,26 +54,15 @@ class GameController extends Controller
 
     public function gameRoom(Room $room, Theme $theme, User $user)
     {
+        $user = Auth::user();
         //お題選択
         if (is_null($room->theme_id)) { //お題が決まっていなければ
             $choosed_Theme = Theme::inRandomOrder()->first();  //お題のランダム選択
             $room->theme_id = $choosed_Theme->id;
             $room->save(); //DB更新
-        } else {
+            } else {
             $choosed_Theme = Theme::find($room->theme_id); // roomsに入っているお題を取得
-        }
-
-        //カード番号選択
-        $user = Auth::user();
-
-        $usedCardNumbers = User::whereNotNull('card_number')->pluck('card_number')->toArray(); // 使用済みのカード番号を取得（NULLを除外）
-
-        do { // 使用されていないカード番号を見つける
-            $choosed_CardNumber = rand(0, 100);
-        } while (in_array($choosed_CardNumber, $usedCardNumbers));
-
-        $user->card_number = $choosed_CardNumber; // 選ばれたカード番号をデータベースに保存
-        $user->save();
+            }
 
         return view('games.gameroom', ['room' => $room, 'user' => $user, 'choosed_Theme' => $choosed_Theme]);
     }
