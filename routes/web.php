@@ -23,6 +23,13 @@ Route::post('/matching', [GameController::class, 'joinRoom'])->name('goMatchingR
 Route::get('/gameroom/{room}', [GameController::class, 'gameRoom'])->name('goGameRoom'); //人数が揃えばゲーム画面へ遷移
 Route::get('/check-room-status/{room}', [GameController::class, 'checkRoomStatus']); //人数を定期的に確認（揃わなければ待機）
 
+//ルーム作成画面by米田
+Route::post('/makeroom', [GameController::class, 'makeRoom'])->name('goMakeRoom'); 
+Route::get('/check-join-user/{room}',[GameController::class, 'checkJoinUser']); //部屋に参加しているユーザーを定期的に確認
+
+//ルーム参加画面by米田
+Route::post('/joinroom', [GameController::class, 'joinMakeRoom'])->name('joinMakeRoom');
+
 //ゲーム画面
 Route::post('/result', [GameController::class,'showResult'])->name('goResultRoom'); //結果画面へ遷移
 
