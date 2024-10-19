@@ -10,7 +10,7 @@
     <div class="container">
         <h1>Ito</h1>
         <p>自分の数字を言葉で表現しよう</p>
-        <form action="{{ route('matching') }}" method="POST">
+        <form action="{{ route('goMatchingRoom') }}" method="POST">
             @csrf
             <button type="submit" class="btn btn-primary">マッチングを開始</button>
         </form>

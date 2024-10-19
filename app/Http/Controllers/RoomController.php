@@ -48,13 +48,13 @@ class RoomController extends Controller
     */
 
     // 部屋の状態を確認するAPI
-    public function checkRoomStatus($roomId)
-    {
-        $room = Room::find($roomId);
+    // public function checkRoomStatus($roomId)
+    // {
+    //     $room = Room::find($roomId);
 
-        // 参加者が2人以上いるかどうかを確認
-        $isFull = $room->participants()->count() == 2;
+    //     // 参加者が2人以上いるかどうかを確認
+    //     $isFull = $room->participants()->count() == 2;
 
-        return response()->json(['isFull' => $isFull]);
-    }
+    //     return response()->json(['isFull' => $isFull]);
+    // }
 }
