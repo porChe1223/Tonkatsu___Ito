@@ -48,6 +48,6 @@ Route::get('/get-current-theme/{room}', [ThemeController::class, 'getCurrentThem
 Route::post('/result/{room}', [GameController::class, 'showResult'])->name('goResultRoom'); //結果画面へ遷移
 
 //結果画面
-Route::delete('/destory/{room}', [RoomController::class, 'destroy'])->name('destroyRoom');   //指定されたルームを削除してダッシュボードへリダイレクト
+Route::delete('/destroy/{room}', [RoomController::class, 'destroy'])->name('destroyRoom');   //指定されたルームを削除してダッシュボードへリダイレクト
 
 require __DIR__ . '/auth.php';
