@@ -72,11 +72,10 @@ class GameController extends Controller
     //結果画面
     public function showResult($room_id){
         // みんなのカード番号とそのユーザー情報を取得
-        // ルーム全員のカードナンバーに修正必要
         $room = Room::findOrFail($room_id);
 
         // Roomモデル内のparticipantsを使用して参加者の一覧を取得
-        $participants = $room->participants;
+        $participants = $room->participants->sortBy('card_number');
         
 
         return view('games.result', compact('room','participants'));
