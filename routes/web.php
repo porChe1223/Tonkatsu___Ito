@@ -26,4 +26,6 @@ Route::get('/check-room-status/{room}', [GameController::class, 'checkRoomStatus
 //ゲーム画面
 Route::post('/result/{room}', [GameController::class,'showResult'])->name('goResultRoom'); //結果画面へ遷移
 
+Route::delete('/destory/{room}',[RoomController::class,'destroy'])->name('destroyRoom');   //指定されたルームを削除してダッシュボードへリダイレクト
+
 require __DIR__.'/auth.php';

@@ -11,24 +11,27 @@
 <body>
     <div>
         <h1>答え</h1>
-        <a href="{{ url('/dashboard') }}"><button type="submit" class="go-result-button">ダッシュボードに戻る</button></a>
         <table>
-        <thead>
-            <tr>
-                <th>名前</th>
+            <thead>
+                <tr>
+                    <th>名前</th>
                 <th>カード番号</th>
             </tr>
         </thead>
         <tbody>
-            <!-- 昇順に修正する -->
             @foreach($participants as $participant)
                 <tr class="card-number">
                     <td>{{ $participant->name }}</td>
                     <td>{{ $participant->card_number }}</td>
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
+                @endforeach
+            </tbody>
+        </table>
+        <form action="{{ route('destroyRoom', $room->id) }}" method="POST">
+            @csrf
+            @method('DELETE')
+            <button type="submit">ゲームを終了</button>
+        </form>
 </body> 
 
 </html>
