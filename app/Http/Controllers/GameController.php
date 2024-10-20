@@ -84,7 +84,7 @@ class GameController extends Controller
         $room = Room::findOrFail($room->id);
 
         // Roomモデル内のparticipantsを使用して参加者の一覧を取得
-        $participants = $room->participants->sortBy('card_number');
+        $participants = $room->participants;
 
         //Breakoutへの遷移
         if ($room->player_count >= 2) { //もし2人揃ったら
@@ -127,7 +127,7 @@ class GameController extends Controller
         $room = Room::findOrFail($room->id);
 
         // Roomモデル内のparticipantsを使用して参加者の一覧を取得
-        $participants = $room->participants->sortBy('card_number');
+        $participants = $room->participants;
         
         //GameRoomへの遷移
         if ($room->player_count >= 3) { //もし2人揃ったら

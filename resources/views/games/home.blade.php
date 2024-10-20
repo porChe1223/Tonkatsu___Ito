@@ -28,15 +28,6 @@
             <input type="number" id="roomId" name="roomId" required>
             <button type="submit" class="btn btn-primary">検索</button>
         </form>
-
-
-        <p>自分で考えたお題を登録してみよう</p>
-
-        <form action="{{ route('MakeTheme') }}" method="POST">
-            @csrf
-            <input type="text" id="ThemeIdea" name="ThemeIdea" required>
-            <button type="submit" class="btn btn-primary" onclick="clickEvent()">お題を登録</button>
-        </form>
     </div>
 
     <script>
