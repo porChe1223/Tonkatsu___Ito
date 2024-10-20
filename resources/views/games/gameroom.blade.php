@@ -21,6 +21,16 @@
                     {{$choosed_Theme->theme}}
                 </span>
             </div>
+
+            <div>
+                <p>自分で考えたお題で遊ぶ！</p>
+                <form action="{{ route('MakeThemeInGame', ['room' => $room->id]) }}" method="POST">
+                    @csrf
+                    <input type="text" id="ThemeIdea" name="ThemeIdea">
+                    <button type="submit" class="btn btn-primary">お題を変更</button>
+                </form>
+            </div>
+
             <div id="card_number-container">
                 <div class="instructions">あなたのカード番号</div>
                 <span id="card-number">
@@ -48,13 +58,10 @@
                     <button id="chat-message-send-button">送信</button>
                 </div>
             </div> -->
-
+        <p>名前を入力</p>
         <form action="{{ route('goResultRoom', ['room' => $room->id]) }}" method="POST">
             @csrf
             <table>
-                <tr>
-                    <th>名前を入力</th>
-                </tr>
                 @foreach ($players as $player)
                 <select name="answer[]">
                     @foreach ($players as $player)

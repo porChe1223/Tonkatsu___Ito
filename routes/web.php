@@ -33,6 +33,8 @@ Route::get('/check-join-user/{room}',[GameController::class, 'checkJoinUser']); 
 //ルーム参加画面by米田
 Route::post('/searchroom', [GameController::class, 'searchRoom'])->name('goSearchRoom');
 
+Route::post('/makingTheme/{room}', [ThemeController::class, 'store'])->name('MakeThemeInGame');
+
 //ゲーム画面
 Route::post('/result/{room}', [GameController::class,'showResult'])->name('goResultRoom'); //結果画面へ遷移
 
