@@ -14,7 +14,15 @@
         <p>自分の数字を言葉で表現しよう</p>
         <form action="{{ route('goMatchingRoom') }}" method="POST">
             @csrf
-            <button type="submit" class="btn btn-primary">マッチングを開始</button>
+            <button type="submit" class="btn btn-primary">ランダムマッチングを開始</button>
+        </form>
+        <form action="{{ route('goMakeRoom') }}" method="POST">
+            @csrf
+            <button type="submit" class="btn btn-primary">ルームを作成</button>
+        </form>
+        <form action="{{ route('goSearchRoom') }}" method="POST">
+            @csrf
+            <button type="submit" class="btn btn-primary">ルームに参加</button>
         </form>
 
         <p>自分で考えたお題を登録してみよう</p>

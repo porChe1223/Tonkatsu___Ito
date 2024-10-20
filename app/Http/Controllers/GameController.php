@@ -51,6 +51,20 @@ class GameController extends Controller
         return view('games.matching', ['room' => $room]); // 2人になるまで待機画面に移行
     }
 
+    //ルームを作成して待機画面に移動by米田
+    public function makeRoom(Room $room)
+    {
+        $room = Room::create([ // 新しい部屋を作成
+            'status' => 'waiting'
+        ]);
+        return view('games.makeroom',['room' => $room]);
+    }
+
+    //部屋番号を入力するsearchroomに移動by米田
+    public function searchRoom()
+    {
+        return view('games.searchroom');
+    }
 
     public function gameRoom(Room $room, Theme $theme, User $user)
     {
@@ -88,5 +102,17 @@ class GameController extends Controller
         $isFull = $room->participants()->count() == 2;
 
         return response()->json(['isFull' => $isFull]);
+    }
+
+    // 部屋に参加しているユーザーと人数を確認by米田
+    public function checkJoinUser($roomId)
+    {
+        $room = Room::find($roomId);
+
+        $isFull = $room->participants()->count() == 2;
+
+        $joiningUserId = $room->participants();
+
+        return response()->json(['isFull' => $isFull, 'joiningUserId' => $joiningUserId]);
     }
 }
