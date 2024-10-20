@@ -28,4 +28,15 @@ class ThemeController extends Controller
 
         //return redirect()->route('goHomeRoom');
     }
+
+    public function getCurrentTheme($roomId)
+    {
+        $room = Room::find($roomId);
+
+        // ルームに紐づけられたテーマを取得
+        $currentTheme = Theme::find($room->theme_id);
+
+        // 現在のお題をJSON形式で返す
+        return response()->json(['currentTheme' => $currentTheme->theme]);
+    }
 }

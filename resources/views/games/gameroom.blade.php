@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GameRoom</title>
     <link rel="stylesheet" href="{{ asset('/css/gameroom.blade.css')}}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 
 <body>
@@ -78,6 +79,30 @@
     <div>
 
     </div>
+    <script>
+        $(document).ready(function() {
+            // 5秒ごとにサーバーからお題を取得して更新
+            setInterval(function() {
+                let roomId = {
+                    {
+                        $room - > id
+                    }
+                }; // 部屋のIDをBladeテンプレートから取得
+
+                $.ajax({
+                    url: "/get-current-theme/" + roomId, // お題取得用のルート
+                    type: "GET",
+                    success: function(response) {
+                        // サーバーから取得したお題で表示を更新
+                        $('#theme').text(response.currentTheme);
+                    },
+                    error: function(xhr) {
+                        console.log("お題の取得に失敗しました。");
+                    }
+                });
+            }, 1000); // 5秒ごとに実行
+        });
+    </script>
 </body>
 
 </html>
