@@ -96,7 +96,7 @@ class GameController extends Controller
         $participants = $room->participants->sortBy('card_number');
 
         // プレイヤーの順番（送信された順番）
-        $player_order = $request->input('player_order');
+        $player_order = $request->input('answer');
 
         // 正しい順番（カード番号順で並べたプレイヤー名）
         $correct_order = $participants->pluck('name')->toArray();

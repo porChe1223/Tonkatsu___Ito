@@ -56,12 +56,11 @@
                     <th>名前を入力</th>
                 </tr>
                 @foreach ($players as $player)
-                <tr>
-                    <td>
-                        <input type="text" name="player_order[]" value="{{ $player->name }}">
-
-                    </td>
-                </tr>
+                <select name="answer[]">
+                    @foreach ($players as $player)
+                    <option name="player_order[]" value="{{ $player->name }}">{{ $player->name }}</option>
+                    @endforeach
+                </select>
                 @endforeach
             </table>
             <button type="submit" class="go-result-button">結果を見る</button>

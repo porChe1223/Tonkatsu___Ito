@@ -19,12 +19,7 @@
         @endif
 
 
-        <h2>あなたが入力した順番</h2>
-        <ul>
-            @foreach ($player_order as $name)
-            <li>{{ $name }}</li>
-            @endforeach
-        </ul>
+
 
         <table>
             <thead>
@@ -42,6 +37,14 @@
                 @endforeach
             </tbody>
         </table>
+
+        <h2>あなたが入力した順番</h2>
+        <ul>
+            @foreach ($player_order as $name)
+            <li>{{ $name }}</li>
+            @endforeach
+        </ul>
+
         <form action="{{ route('destroyRoom', $room->id) }}" method="POST">
             @csrf
             @method('DELETE')
