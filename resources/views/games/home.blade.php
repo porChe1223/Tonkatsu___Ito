@@ -21,7 +21,7 @@
 
         <form action="{{ route('MakeTheme') }}" method="POST">
             @csrf
-            <input type="text" id="ThemeIdea" name="ThemeIdea">
+            <input type="text" id="ThemeIdea" name="ThemeIdea" required>
             <button type="submit" class="btn btn-primary" onclick="clickEvent()">お題を登録</button>
         </form>
     </div>
