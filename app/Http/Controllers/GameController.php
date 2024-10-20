@@ -85,12 +85,15 @@ class GameController extends Controller
     
 
     //結果画面
-    public function showResult(){
-        // みんなのカード番号を取得
-        $usersCardNumbers = User::pluck('card_number')->toArray();
-        sort($usersCardNumbers);
+    public function showResult($room_id){
+        // みんなのカード番号とそのユーザー情報を取得
+        $room = Room::findOrFail($room_id);
 
-        return view('games.result', compact('usersCardNumbers'));
+        // Roomモデル内のparticipantsを使用して参加者の一覧を取得
+        $participants = $room->participants->sortBy('card_number');
+        
+
+        return view('games.result', compact('room','participants'));
     }
 
     // 部屋の状態を確認するAPI

@@ -11,9 +11,27 @@
 <body>
     <div>
         <h1>答え</h1>
-        @foreach ($usersCardNumbers as $each_number)
-        <span class="card-number">{{$each_number}}</span>
-        @endforeach
-</body>
+        <table>
+            <thead>
+                <tr>
+                    <th>名前</th>
+                <th>カード番号</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($participants as $participant)
+                <tr class="card-number">
+                    <td>{{ $participant->name }}</td>
+                    <td>{{ $participant->card_number }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+        <form action="{{ route('destroyRoom', $room->id) }}" method="POST">
+            @csrf
+            @method('DELETE')
+            <button type="submit">ゲームを終了</button>
+        </form>
+</body> 
 
 </html>

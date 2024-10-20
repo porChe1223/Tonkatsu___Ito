@@ -49,7 +49,7 @@
                 </div>
             </div> -->
 
-        <form action="{{ route('goResultRoom') }}" method="POST">
+        <form action="{{ route('goResultRoom', ['room' => $room->id]) }}" method="POST">
             @csrf
             <button type="submit" class="go-result-button">結果を見る</button>
         </form>

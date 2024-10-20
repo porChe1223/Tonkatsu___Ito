@@ -34,9 +34,9 @@ Route::get('/check-join-user/{room}',[GameController::class, 'checkJoinUser']); 
 Route::post('/searchroom', [GameController::class, 'searchRoom'])->name('goSearchRoom');
 
 //ゲーム画面
-Route::post('/result', [GameController::class,'showResult'])->name('goResultRoom'); //結果画面へ遷移
+Route::post('/result/{room}', [GameController::class,'showResult'])->name('goResultRoom'); //結果画面へ遷移
 
 //結果画面
-Route::get('/result', [GameController::class, 'showResult'])->name('ShowResult');
+Route::delete('/destory/{room}',[RoomController::class,'destroy'])->name('destroyRoom');   //指定されたルームを削除してダッシュボードへリダイレクト
 
 require __DIR__ . '/auth.php';
