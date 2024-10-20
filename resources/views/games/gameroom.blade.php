@@ -51,6 +51,19 @@
 
         <form action="{{ route('goResultRoom', ['room' => $room->id]) }}" method="POST">
             @csrf
+            <table>
+                <tr>
+                    <th>名前を入力</th>
+                </tr>
+                @foreach ($players as $player)
+                <tr>
+                    <td>
+                        <input type="text" name="player_order[]" value="{{ $player->name }}">
+
+                    </td>
+                </tr>
+                @endforeach
+            </table>
             <button type="submit" class="go-result-button">結果を見る</button>
         </form>
 

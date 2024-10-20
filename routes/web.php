@@ -19,7 +19,7 @@ Route::get('/', function () { return view('welcome'); }); //画面表示
 Route::get('/home', function () { return view('games.home'); })->middleware(['auth', 'verified'])->name('goHomeRoom'); //ユーザ認証からの画面表示
 Route::post('/matching', [GameController::class, 'joinRoom'])->name('goMatchingRoom'); //マッチング画面へ遷移
 
-//テーマ入力byおばた
+//テーマ入力
 Route::post('/makingTheme', [ThemeController::class, 'store'])->name('MakeTheme');
 
 //マッチング画面

@@ -21,7 +21,7 @@ class GameController extends Controller
                 'status' => 'waiting'
             ]);
         }
-        
+
         $room->player_count += 1; //部屋のプレイヤーの増加
         $room->save(); //DBに保存
 
@@ -33,10 +33,10 @@ class GameController extends Controller
         $user = Auth::user();
 
         $usedCardNumbers = User::whereNotNull('card_number')->pluck('card_number')->toArray(); // 使用済みのカード番号を取得（NULLを除外）
-        
+
         do { // 使用されていないカード番号を見つける
             $choosed_CardNumber = rand(0, 100);
-           } while (in_array($choosed_CardNumber, $usedCardNumbers));
+        } while (in_array($choosed_CardNumber, $usedCardNumbers));
 
         $user->card_number = $choosed_CardNumber; // 選ばれたカード番号をデータベースに保存
         $user->save();
@@ -44,7 +44,7 @@ class GameController extends Controller
         //GameRoomへの遷移
         if ($room->player_count >= 2) { //もし2人揃ったら
             $room->update(['status' => 'full']); //部屋のステータスを変更
-            
+
             return redirect()->route('goGameRoom', ['room' => $room]); //gameroomに遷移・部屋番号を返す
         }
 
@@ -57,7 +57,7 @@ class GameController extends Controller
         $room = Room::create([ // 新しい部屋を作成
             'status' => 'waiting'
         ]);
-        return view('games.makeroom',['room' => $room]);
+        return view('games.makeroom', ['room' => $room]);
     }
 
     //部屋番号を入力するsearchroomに移動by米田
@@ -74,26 +74,45 @@ class GameController extends Controller
             $choosed_Theme = Theme::inRandomOrder()->first();  //お題のランダム選択
             $room->theme_id = $choosed_Theme->id;
             $room->save(); //DB更新
-            } else {
+        } else {
             $choosed_Theme = Theme::find($room->theme_id); // roomsに入っているお題を取得
-            }
+        }
 
-        return view('games.gameroom', ['room' => $room, 'user' => $user, 'choosed_Theme' => $choosed_Theme]);
+        $players = $room->participants;
+
+        return view('games.gameroom', ['room' => $room, 'user' => $user, 'choosed_Theme' => $choosed_Theme, 'players' => $players]);
     }
 
-    
-    
+
+
 
     //結果画面
-    public function showResult($room_id){
+    public function showResult($room_id, Request $request)
+    {
         // みんなのカード番号とそのユーザー情報を取得
         $room = Room::findOrFail($room_id);
 
         // Roomモデル内のparticipantsを使用して参加者の一覧を取得
         $participants = $room->participants->sortBy('card_number');
-        
 
-        return view('games.result', compact('room','participants'));
+        // プレイヤーの順番（送信された順番）
+        $player_order = $request->input('player_order');
+
+        // 正しい順番（カード番号順で並べたプレイヤー名）
+        $correct_order = $participants->pluck('name')->toArray();
+
+        // プレイヤーの順番が正しいかを判定
+        $isCorrect = $player_order === $correct_order;
+
+        return view(
+            'games.result',
+            [
+                'isCorrect' => $isCorrect,
+                'correct_order' => $correct_order,
+                'player_order' => $player_order
+            ],
+            compact('room', 'participants')
+        );
     }
 
     // 部屋の状態を確認するAPI
