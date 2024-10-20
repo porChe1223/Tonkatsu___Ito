@@ -3,6 +3,7 @@
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ThemeController;
+use App\Http\Controllers\RoomController;
 use Illuminate\Support\Facades\Route;
 
 //ユーザ関係
@@ -17,7 +18,9 @@ Route::get('/', function () { return view('welcome'); }); //画面表示
 
 //ダッシュボード画面
 Route::get('/home', function () { return view('games.home'); })->middleware(['auth', 'verified'])->name('goHomeRoom'); //ユーザ認証からの画面表示
-Route::post('/matching', [GameController::class, 'joinRoom'])->name('goMatchingRoom'); //マッチング画面へ遷移
+Route::post('/matching', [GameController::class, 'goMatchingRoom'])->name('goMatchingRoom'); //マッチング画面へ遷移
+Route::post('/breakout_host', [GameController::class, 'makeBreakoutRoom'])->name('makeBreakoutRoom'); //ブレイクアウト画面を作成
+Route::post('/breakout_guest', [GameController::class, 'joinBreakoutRoom'])->name('joinBreakoutRoom'); //ブレイクアウト画面へ参加
 
 //テーマ入力byおばた
 Route::post('/makingTheme', [ThemeController::class, 'store'])->name('MakeTheme');
@@ -27,11 +30,7 @@ Route::get('/gameroom/{room}', [GameController::class, 'gameRoom'])->name('goGam
 Route::get('/check-room-status/{room}', [GameController::class, 'checkRoomStatus']); //人数が揃わなければ待機
 
 //ルーム作成画面by米田
-Route::post('/makeroom', [GameController::class, 'makeRoom'])->name('goMakeRoom'); 
 Route::get('/check-join-user/{room}',[GameController::class, 'checkJoinUser']); //部屋に参加しているユーザーを定期的に確認
-
-//ルーム参加画面by米田
-Route::post('/searchroom', [GameController::class, 'searchRoom'])->name('goSearchRoom');
 
 //ゲーム画面
 Route::post('/result/{room}', [GameController::class,'showResult'])->name('goResultRoom'); //結果画面へ遷移

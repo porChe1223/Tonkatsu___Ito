@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 class GameController extends Controller
 {
     //マッチング画面
-    public function joinRoom(Theme $theme, User $user)
+    public function goMatchingRoom(Theme $theme, User $user)
     {
         $room = Room::where('status', 'waiting')->first(); // 既存の空き部屋を探す
 
@@ -29,6 +29,7 @@ class GameController extends Controller
             'room_id' => $room->id,
             'user_id' => Auth::id(),
         ]);
+
         //カード番号選択
         $user = Auth::user();
 
@@ -48,22 +49,94 @@ class GameController extends Controller
             return redirect()->route('goGameRoom', ['room' => $room]); //gameroomに遷移・部屋番号を返す
         }
 
-        return view('games.matching', ['room' => $room]); // 2人になるまで待機画面に移行
+        return view('games.matching', ['room' => $room]); // 2人になるまで待機
     }
 
-    //ルームを作成して待機画面に移動by米田
-    public function makeRoom(Room $room)
+    //ブレイクアウトルーム作成画面
+    public function makeBreakoutRoom(Theme $theme, User $user, Room $room)
     {
+        //ルームを作成して待機画面に移動by米田
         $room = Room::create([ // 新しい部屋を作成
             'status' => 'waiting'
         ]);
-        return view('games.makeroom',['room' => $room]);
+        
+        $room->player_count += 1; //部屋のプレイヤーの増加
+        $room->save(); //DBに保存
+
+        RoomUser::firstOrCreate([ // 部屋に参加者を追加
+            'room_id' => $room->id,
+            'user_id' => Auth::id(),
+        ]);
+
+        //カード番号選択
+        $user = Auth::user();
+
+        $usedCardNumbers = User::whereNotNull('card_number')->pluck('card_number')->toArray(); // 使用済みのカード番号を取得（NULLを除外）
+        
+        do { // 使用されていないカード番号を見つける
+            $choosed_CardNumber = rand(0, 100);
+           } while (in_array($choosed_CardNumber, $usedCardNumbers));
+
+        $user->card_number = $choosed_CardNumber; // 選ばれたカード番号をデータベースに保存
+        $user->save();
+
+        // みんなのカード番号とそのユーザー情報を取得
+        $room = Room::findOrFail($room->id);
+
+        // Roomモデル内のparticipantsを使用して参加者の一覧を取得
+        $participants = $room->participants->sortBy('card_number');
+
+        //Breakoutへの遷移
+        if ($room->player_count >= 2) { //もし2人揃ったら
+            $room->update(['status' => 'full']); //部屋のステータスを変更
+            
+            return redirect()->route('goBreakoutRoom', ['room' => $room]); //breakoutroomに遷移・部屋番号を返す
+        }
+
+        return view('games.breakout_host', ['room' => $room], compact('room','participants')); // 2人になるまで待機
     }
 
-    //部屋番号を入力するsearchroomに移動by米田
-    public function searchRoom()
+
+    //部屋番号を入力してブレイクアウトルームに参加画面by米田
+    public function joinBreakoutRoom(Request $request)
     {
-        return view('games.searchroom');
+        $roomId = $request->input('roomId');
+        $room = Room::find($roomId);
+
+        $room->player_count += 1; //部屋のプレイヤーの増加
+        $room->save(); //DBに保存
+
+        RoomUser::firstOrCreate([ // 部屋に参加者を追加
+            'room_id' => $room->id,
+            'user_id' => Auth::id(),
+        ]);
+
+        //カード番号選択
+        $user = Auth::user();
+
+        $usedCardNumbers = User::whereNotNull('card_number')->pluck('card_number')->toArray(); // 使用済みのカード番号を取得（NULLを除外）
+        
+        do { // 使用されていないカード番号を見つける
+            $choosed_CardNumber = rand(0, 100);
+           } while (in_array($choosed_CardNumber, $usedCardNumbers));
+
+        $user->card_number = $choosed_CardNumber; // 選ばれたカード番号をデータベースに保存
+        $user->save();
+
+        // みんなのカード番号とそのユーザー情報を取得
+        $room = Room::findOrFail($room->id);
+
+        // Roomモデル内のparticipantsを使用して参加者の一覧を取得
+        $participants = $room->participants->sortBy('card_number');
+        
+        //GameRoomへの遷移
+        if ($room->player_count >= 3) { //もし2人揃ったら
+            $room->update(['status' => 'full']); //部屋のステータスを変更
+            
+            return redirect()->route('goGameRoom', ['room' => $room]); //breakoutroomに遷移
+        }
+
+        return view('games.breakout_guest', ['room' => $room], compact('participants')); // 2人になるまで待機
     }
 
     public function gameRoom(Room $room, Theme $theme, User $user)
@@ -112,7 +185,7 @@ class GameController extends Controller
     {
         $room = Room::find($roomId);
 
-        $isFull = $room->participants()->count() == 2;
+        $isFull = $room->participants()->count() == 3;
 
         $joiningUserId = $room->participants();
 
