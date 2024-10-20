@@ -11,10 +11,6 @@ class ThemeController extends Controller
 {
     public function store(Request $request, $roomId)
     {
-        //$contact = new Theme;
-        //$contact->theme = $request->input('ThemeIdea');
-        //$contact->save();
-
         $newTheme = new Theme;
         $newTheme->theme = $request->input('ThemeIdea');
         $newTheme->save();
@@ -25,8 +21,6 @@ class ThemeController extends Controller
         $room->save();
 
         return redirect()->route('goGameRoom', ['room' => $roomId]);
-
-        //return redirect()->route('goHomeRoom');
     }
 
     public function getCurrentTheme($roomId)
