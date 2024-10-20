@@ -66,6 +66,16 @@ class GameController extends Controller
         return view('games.searchroom');
     }
 
+    //部屋番号入力してその部屋の情報を取得by米田
+    public function search(Request $Request)
+    {
+        $roomId = $Request->input('roomid');
+        $room = Room::find($roomId);
+        $isFull = $room ? $room->participants()->count() == 2 : false;
+        
+        return response()->json(['exists' => $room ? true : false, 'isFull' => $isFull]);
+    }
+
     public function gameRoom(Room $room, Theme $theme, User $user)
     {
         $user = Auth::user();

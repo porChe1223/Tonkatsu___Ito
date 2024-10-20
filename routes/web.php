@@ -31,7 +31,8 @@ Route::post('/makeroom', [GameController::class, 'makeRoom'])->name('goMakeRoom'
 Route::get('/check-join-user/{room}',[GameController::class, 'checkJoinUser']); //部屋に参加しているユーザーを定期的に確認
 
 //ルーム参加画面by米田
-Route::post('/searchroom', [GameController::class, 'searchRoom'])->name('goSearchRoom');
+Route::get('/searchroom', [GameController::class, 'searchRoom'])->name('searchRoom');
+Route::post('/searchroom', [Gamecontroller::class, 'search'])->name('search');
 
 //ゲーム画面
 Route::post('/result', [GameController::class,'showResult'])->name('goResultRoom'); //結果画面へ遷移
