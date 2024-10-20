@@ -14,6 +14,6 @@ class ThemeController extends Controller
         $contact->theme = $request->input('ThemeIdea');
         $contact->save();
 
-        return redirect()->route('dashboard');
+        return redirect()->route('goHomeRoom');
     }
 }
