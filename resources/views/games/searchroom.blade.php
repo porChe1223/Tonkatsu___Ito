@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="ja">
 
 <head>
@@ -11,7 +11,9 @@
     <div class="container">
         <h1>部屋番号を入力して下さい</h1>
         <input type="number" id="roomId" required>
-        <button type="submit" class="btn btn-primary">検索</button>
-        <!-- 部屋番号(=roomid)を入力してその部屋に参加させたい -->
+        <form method="POST" action="{{route('goBreakoutRoom')}}">
+            @csrf
+            <button type="submit" class="btn btn-primary">検索</button>
+        </form>
 </body>
-</html>
+</html> -->
