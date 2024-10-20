@@ -16,7 +16,7 @@ Route::middleware('auth')->group(function () {
 Route::get('/', function () { return view('welcome'); }); //画面表示
 
 //ダッシュボード画面
-Route::get('/home', function () { return view('dashboard'); })->middleware(['auth', 'verified'])->name('dashboard'); //ユーザ認証からの画面表示
+Route::get('/home', function () { return view('games.home'); })->middleware(['auth', 'verified'])->name('goHomeRoom'); //ユーザ認証からの画面表示
 Route::post('/matching', [GameController::class, 'joinRoom'])->name('goMatchingRoom'); //マッチング画面へ遷移
 
 //テーマ入力byおばた
