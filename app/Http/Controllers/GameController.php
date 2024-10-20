@@ -60,10 +60,10 @@ class GameController extends Controller
         return view('games.makeroom',['room' => $room]);
     }
 
-    //部屋番号を入力するjoinroomに移動by米田
-    public function joinMakeroom()
+    //部屋番号を入力するsearchroomに移動by米田
+    public function searchRoom()
     {
-        return view('games.joinroom');
+        return view('games.searchroom');
     }
 
     public function gameRoom(Room $room, Theme $theme, User $user)

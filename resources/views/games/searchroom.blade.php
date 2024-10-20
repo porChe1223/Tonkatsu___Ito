@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>部屋番号検索画面</title>
-    <link rel="stylesheet" href="{{ asset('/css/joinroom.blade.css')}}">
+    <link rel="stylesheet" href="{{ asset('/css/searchroom.blade.css')}}">
 </head>
 <body>
     <div class="container">

@@ -18,7 +18,7 @@
             @csrf
             <button type="submit" class="btn btn-primary">ルームを作成</button>
         </form>
-        <form action="{{ route('joinMakeRoom') }}" method="POST">
+        <form action="{{ route('goSearchRoom') }}" method="POST">
             @csrf
             <button type="submit" class="btn btn-primary">ルームに参加</button>
         </form>
