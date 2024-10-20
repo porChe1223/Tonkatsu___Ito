@@ -1,4 +1,4 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 
 <head>
@@ -33,4 +33,4 @@
     </script>
 </body>
 
-</html> -->
+</html>
