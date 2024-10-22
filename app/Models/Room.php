@@ -18,4 +18,10 @@ class Room extends Model
                     ->using(RoomUser::class)
                     ->withTimestamps();
     }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
+    }
+
 }

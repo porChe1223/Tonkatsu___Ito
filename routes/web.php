@@ -3,6 +3,7 @@
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ThemeController;
+use App\Http\Controllers\ChatController;
 use Illuminate\Support\Facades\Route;
 
 //ユーザ関係
@@ -38,5 +39,15 @@ Route::post('/result/{room}', [GameController::class,'showResult'])->name('goRes
 
 //結果画面
 Route::delete('/destory/{room}',[RoomController::class,'destroy'])->name('destroyRoom');   //指定されたルームを削除してダッシュボードへリダイレクト
+
+// チャット関係
+// チャットルームの表示
+Route::get('/chat/{roomId}', [ChatController::class, 'index'])->middleware('auth')->name('chat.index');
+
+// メッセージの取得
+Route::get('/chat/{roomId}/messages', [ChatController::class, 'fetchMessages'])->middleware('auth')->name('chat.fetchMessages');
+
+// メッセージの送信
+Route::post('/chat/{roomId}/messages', [ChatController::class, 'sendMessage'])->middleware('auth')->name('chat.sendMessage');
 
 require __DIR__ . '/auth.php';
