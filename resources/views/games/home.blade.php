@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ito</title>
-    <link rel="stylesheet" href="{{ asset('css/dashboard.blade.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/home.blade.css') }}">
 </head>
 
 <body>
@@ -29,12 +29,6 @@
             <button type="submit" class="btn btn-primary">検索</button>
         </form>
     </div>
-
-    <script>
-        function clickEvent() {
-            alert("登録しますか？");
-        }
-    </script>
 </body>
 
 </html>

@@ -22,16 +22,16 @@ Route::get('/', function () {
 
 //ホーム画面
 Route::get('/home', function () { return view('games.home'); })->middleware(['auth', 'verified'])->name('goHomeRoom'); //ユーザ認証からの画面表示
-Route::post('/matching', [GameController::class, 'goMatchingRoom'])->name('goMatchingRoom'); //マッチング画面へ遷移
-Route::post('/breakout_host', [GameController::class, 'makeBreakoutRoom'])->name('makeBreakoutRoom'); //ブレイクアウトルームを作成
-Route::post('/breakout_guest', [GameController::class, 'joinBreakoutRoom'])->name('joinBreakoutRoom'); //ブレイクアウトルームへ参加
+Route::post('/matching', [RoomController::class, 'goMatchingRoom'])->name('goMatchingRoom'); //マッチング画面へ遷移
+Route::post('/breakout_host', [RoomController::class, 'makeBreakoutRoom'])->name('makeBreakoutRoom'); //ブレイクアウトルームを作成
+Route::post('/breakout_guest', [RoomController::class, 'joinBreakoutRoom'])->name('joinBreakoutRoom'); //ブレイクアウトルームへ参加
 
 //テーマ入力
 Route::post('/makingTheme', [ThemeController::class, 'store'])->name('MakeTheme');
 
 //マッチング画面
-Route::get('/gameroom/{room}', [GameController::class, 'gameRoom'])->name('goGameRoom'); //人数が揃えばゲーム画面へ遷移
-Route::get('/check-room-status/{room}', [RoomController::class, 'checkRoomStatus']); //人数が揃わなければ待機
+Route::get('/check-room-status/{room}', [RoomController::class, 'checkRoomStatus']); //人数が揃えばゲーム画面へ遷移・人数が揃わなければ待機
+Route::get('/gameroom/{room}', [GameController::class, 'gameRoom'])->name('GameRoom'); //ゲームルームに入った際にお題と番号をランダム選択
 
 //ブレイクアウト画面
 Route::get('/check-join-user/{room}', [RoomController::class, 'checkJoinUser']); //部屋に参加しているユーザーを定期的に確認
