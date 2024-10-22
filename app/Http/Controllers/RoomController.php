@@ -45,7 +45,7 @@ class RoomController extends Controller
         $user->save();
 
         //GameRoomへの遷移
-        if ($room->player_count >= 3) { //揃ったら
+        if ($room->player_count == 2) { //揃ったら
             $room->update(['status' => 'full']); //部屋のステータスを変更
 
             return redirect()->route('GameRoom', ['room' => $room]); //gameroomに遷移・部屋番号を返す
@@ -111,7 +111,6 @@ class RoomController extends Controller
         return view('games.breakout_host', ['room' => $room]); // 揃うまで待機
     }
 
-
     //部屋番号を入力してブレイクアウトルームに参加画面by米田
     public function joinBreakoutRoom(Request $request)
     {
@@ -168,9 +167,17 @@ class RoomController extends Controller
 
 
     //ゲームが終了した部屋は削除
-    public function destroy(Room $room)
+    public function destroyRoom(Room $room)
     {
-        $room->delete();
-        return redirect()->route('goHomeRoom');
+        $participants = $room->participants; //参加者のリストを取得
+        //ここに何もユーザの情報が入っていない
+
+        $room->delete(); //部屋を削除
+
+        foreach ($participants as $participant) { // 参加者全員に部屋が削除されたことを通知する処理を追加
+            session()->put('room_deleted', true); //セッションにメッセージをセットして、ユーザーをリダイレクト
+        }
+
+        return redirect()->route('goHomeRoom')->with('message', 'ゲームが終了しました');
     }
 }

@@ -37,11 +37,11 @@ Route::get('/gameroom/{room}', [GameController::class, 'gameRoom'])->name('GameR
 Route::get('/check-join-user/{room}', [RoomController::class, 'checkJoinUser']); //部屋に参加しているユーザーを定期的に確認
 
 //ゲーム画面
-Route::post('/result/{room}', [GameController::class, 'showResult'])->name('goResultRoom'); //結果画面へ遷移
 Route::post('/makingTheme/{room}', [ThemeController::class, 'store'])->name('MakeThemeInGame'); //新しいお題を作成
 Route::get('/get-current-theme/{room}', [ThemeController::class, 'getCurrentTheme']); //現在のお題を更新
+Route::post('/result/{room}', [GameController::class, 'showResult'])->name('goResultRoom'); //結果画面へ遷移
 
 //結果画面
-Route::delete('/destroy/{room}', [RoomController::class, 'destroy'])->name('destroyRoom'); //指定されたルームを削除してダッシュボードへリダイレクト
+Route::delete('/home', [RoomController::class, 'destroyRoom'])->name('destroyRoom'); //指定されたルームを削除してダッシュボードへリダイレクト
 
 require __DIR__ . '/auth.php';

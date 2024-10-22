@@ -33,27 +33,22 @@ class GameController extends Controller
     //結果画面
     public function showResult($room_id, Request $request)
     {
-        // みんなのカード番号とそのユーザー情報を取得
-        $room = Room::findOrFail($room_id);
+        $room = Room::findOrFail($room_id); //みんなのカード番号とそのユーザー情報を取得
 
-        // Roomモデル内のparticipantsを使用して参加者の一覧を取得
-        $participants = $room->participants->sortBy('card_number');
+        $participants = $room->participants->sortBy('card_number'); //Roomモデル内のparticipantsを使用して参加者の一覧を取得
+        
+        $player_order = $request->input('answer'); //プレイヤーの順番（送信された順番）
 
-        // プレイヤーの順番（送信された順番）
-        $player_order = $request->input('answer');
+        $correct_order = $participants->pluck('name')->toArray(); //正しい順番（カード番号順で並べたプレイヤー名）
 
-        // 正しい順番（カード番号順で並べたプレイヤー名）
-        $correct_order = $participants->pluck('name')->toArray();
-
-        // プレイヤーの順番が正しいかを判定
-        $isCorrect = $player_order === $correct_order;
+        $isCorrect = $player_order === $correct_order; //プレイヤーの順番が正しいかを判定
 
         return view(
             'games.result',
             [
                 'isCorrect' => $isCorrect,
                 'correct_order' => $correct_order,
-                'player_order' => $player_order
+                'player_order' => $player_order,
             ],
             compact('room', 'participants')
         );
