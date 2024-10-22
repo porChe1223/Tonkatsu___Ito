@@ -73,21 +73,14 @@
             </table>
             <button type="submit" class="go-result-button">結果を見る</button>
         </form>
-
     </div>
 
-    <div>
 
-    </div>
     <script>
         $(document).ready(function() {
-            // 5秒ごとにサーバーからお題を取得して更新
+            // 1秒ごとにサーバーからお題を取得して更新
             setInterval(function() {
-                let roomId = {
-                    {
-                        $room - > id
-                    }
-                }; // 部屋のIDをBladeテンプレートから取得
+                let roomId = "{{ $room->id }}"; // 部屋のIDをBladeテンプレートから取得
 
                 $.ajax({
                     url: "/get-current-theme/" + roomId, // お題取得用のルート
@@ -100,7 +93,7 @@
                         console.log("お題の取得に失敗しました。");
                     }
                 });
-            }, 1000); // 5秒ごとに実行
+            }, 1000); // 1秒ごとに実行
         });
     </script>
 </body>

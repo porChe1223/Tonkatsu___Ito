@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 class GameController extends Controller
 {
     //マッチング画面
-    public function goMatchingRoom(Theme $theme, User $user)
+    public function goMatchingRoom(User $user)
     {
         $room = Room::where('status', 'waiting')->first(); // 既存の空き部屋を探す
 
@@ -29,6 +29,8 @@ class GameController extends Controller
             'room_id' => $room->id,
             'user_id' => Auth::id(),
         ]);
+
+        $participants = $room->participants; //部屋の参加者を取得
 
         //カード番号選択
         $user = Auth::user();
@@ -49,7 +51,7 @@ class GameController extends Controller
             return redirect()->route('goGameRoom', ['room' => $room]); //gameroomに遷移・部屋番号を返す
         }
 
-        return view('games.matching', ['room' => $room]); // 2人になるまで待機
+        return view('games.matching', ['room' => $room], compact('room', 'participants')); // 2人になるまで待機
     }
 
     //ブレイクアウトルーム作成画面
@@ -186,28 +188,5 @@ class GameController extends Controller
             ],
             compact('room', 'participants')
         );
-    }
-
-    // 部屋の状態を確認するAPI
-    public function checkRoomStatus($roomId)
-    {
-        $room = Room::find($roomId);
-
-        // 参加者が2人以上いるかどうかを確認
-        $isFull = $room->participants()->count() == 2;
-
-        return response()->json(['isFull' => $isFull]);
-    }
-
-    // 部屋に参加しているユーザーと人数を確認by米田
-    public function checkJoinUser($roomId)
-    {
-        $room = Room::find($roomId);
-
-        $isFull = $room->participants()->count() == 3;
-
-        $joiningUserId = $room->participants();
-
-        return response()->json(['isFull' => $isFull, 'joiningUserId' => $joiningUserId]);
     }
 }
