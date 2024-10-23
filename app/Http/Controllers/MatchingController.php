@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\Theme;
 use App\Models\Room;
 use App\Models\RoomUser;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class MatchingController extends Controller
