@@ -61,7 +61,7 @@ class RoomController extends Controller
 
         $isFull = $room->participants()->count() == 3; // 参加者が2人以上いるかどうかを確認
 
-        return response()->json(['isFull' => $isFull]);
+        return response()->json(['isFull' => $isFull, 'player_count' => $room->player_count]);
     }
 
     //マッチングルームを抜けたら自分の情報を消す
@@ -117,10 +117,10 @@ class RoomController extends Controller
         $participants = $room->participants;
 
         //Breakoutへの遷移
-        if ($room->player_count == 3) { //揃ったら
+        if ($room->player_count == 2) { //揃ったら
             $room->update(['status' => 'full']); //部屋のステータスを変更
             
-            return redirect()->route('goBreakoutRoom', ['room' => $room]); //breakoutroomに遷移・部屋番号を返す
+            return redirect()->route('GameRoom', ['room' => $room]); //gameroomに遷移・部屋番号を返す
         }
 
         return view('games.breakout_host', ['room' => $room]); // 揃うまで待機
@@ -159,10 +159,10 @@ class RoomController extends Controller
         $participants = $room->participants;
         
         //GameRoomへの遷移
-        if ($room->player_count == 3) { //揃ったら
+        if ($room->player_count == 2) { //揃ったら
             $room->update(['status' => 'full']); //部屋のステータスを変更
             
-            return redirect()->route('GameRoom', ['room' => $room]); //breakoutroomに遷移
+            return redirect()->route('GameRoom', ['room' => $room]); //gameroomに遷移
         }
 
         return view('games.breakout_guest', ['room' => $room]); // 揃うまで待機
@@ -173,7 +173,7 @@ class RoomController extends Controller
     {
         $room = Room::find($roomId);
 
-        $isFull = $room->participants()->count() == 3;
+        $isFull = $room->participants()->count() == 2;
 
         return response()->json(['isFull' => $isFull]);
     }
@@ -193,6 +193,22 @@ class RoomController extends Controller
     }
 
 
+
+
+    //ゲームルームを抜けたら自分の情報を消す
+    public function removeGameRoom(Room $room)
+    {
+        $yourRoomUser = RoomUser::where('user_id', Auth::id())->first(); //自身が登録されているroom_userを取得
+        $room = Room::find($yourRoomUser->room_id); //自身が今入っているroomを取得
+
+        $yourRoomUser->delete(); //自身が登録されているroom_userを削除
+        
+
+        $room->player_count -= 1; //部屋のプレイヤーを減らす
+        $room->save(); //DBに保存
+
+        return response(null, 200);
+    }
 
 
     //ゲームが終了した部屋は削除

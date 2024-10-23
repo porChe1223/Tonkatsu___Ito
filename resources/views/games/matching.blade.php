@@ -14,7 +14,7 @@
         <h1>マッチング中...</h1>
         <p>他の参加者を待っています...</p>
         <h1>参加者</h1>
-        <p id="participants" font-weight="bold">{{$room->player_count}}</p>
+        <span id="participants" style="font-weight: bold;">{{$room->player_count}}</span>
     </div>
 </body>
 
@@ -28,6 +28,8 @@
                 if (data.isFull) {
                     // 部屋が満員になったらプレイ画面にリダイレクト
                     window.location.href = '/gameroom/{{ $room->id }}';
+                } else {
+                    document.getElementById('participants').textContent = data.player_count; // 取得したプレイヤー数で更新
                 }
             })
             .catch(error => {
