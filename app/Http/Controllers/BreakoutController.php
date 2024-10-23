@@ -48,7 +48,7 @@ class BreakoutController extends Controller
         $participants = $room->participants;
 
         //Breakoutへの遷移
-        if ($room->player_count == 2) { //揃ったら
+        if ($room->player_count == 3) { //揃ったら
             $room->update(['status' => 'full']); //部屋のステータスを変更
             
             return redirect()->route('GameRoom', ['room' => $room]); //gameroomに遷移・部屋番号を返す
@@ -92,7 +92,7 @@ class BreakoutController extends Controller
         $participants = $room->participants;
         
         //GameRoomへの遷移
-        if ($room->player_count == 2) { //揃ったら
+        if ($room->player_count == 3) { //揃ったら
             $room->update(['status' => 'full']); //部屋のステータスを変更
             
             return redirect()->route('GameRoom', ['room' => $room]); //gameroomに遷移
@@ -106,7 +106,7 @@ class BreakoutController extends Controller
     {
         $room = Room::find($roomId);
 
-        $isFull = $room->participants()->count() == 2;
+        $isFull = $room->participants()->count() == 3;
 
         return response()->json(['isFull' => $isFull]);
     }

@@ -13,8 +13,8 @@
     <div class="container">
         <h1>マッチング中...</h1>
         <p>他の参加者を待っています...</p>
-        <h1>参加者</h1>
         <span id="participants" style="font-weight: bold;">{{$room->player_count}}</span>
+        <span> /4</span>
     </div>
 </body>
 
@@ -35,7 +35,7 @@
             .catch(error => {
                 console.error('Error fetching room status:', error);
             });
-    }, 2000); // 1秒ごとにサーバーの状態を確認
+    }, 500); // 1秒ごとにサーバーの状態を確認
 
     window.addEventListener('beforeunload', (event) => {
         fetch(`/matching`, {
