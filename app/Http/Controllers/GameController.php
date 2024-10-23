@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Theme;
 use App\Models\Room;
+use App\Models\RoomUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -27,30 +28,17 @@ class GameController extends Controller
         return view('games.gameroom', ['room' => $room, 'user' => $user, 'choosed_Theme' => $choosed_Theme, 'players' => $players]);
     }
 
-
-
-
-    //結果画面
-    public function showResult($room_id, Request $request)
+    public function removeGameRoom(Room $room)
     {
-        $room = Room::findOrFail($room_id); //みんなのカード番号とそのユーザー情報を取得
+        $yourRoomUser = RoomUser::where('user_id', Auth::id())->first(); //自身が登録されているroom_userを取得
+        $room = Room::find($yourRoomUser->room_id); //自身が今入っているroomを取得
 
-        $participants = $room->participants->sortBy('card_number'); //Roomモデル内のparticipantsを使用して参加者の一覧を取得
+        $yourRoomUser->delete(); //自身が登録されているroom_userを削除
         
-        $player_order = $request->input('answer'); //プレイヤーの順番（送信された順番）
 
-        $correct_order = $participants->pluck('name')->toArray(); //正しい順番（カード番号順で並べたプレイヤー名）
+        $room->player_count -= 1; //部屋のプレイヤーを減らす
+        $room->save(); //DBに保存
 
-        $isCorrect = $player_order === $correct_order; //プレイヤーの順番が正しいかを判定
-
-        return view(
-            'games.result',
-            [
-                'isCorrect' => $isCorrect,
-                'correct_order' => $correct_order,
-                'player_order' => $player_order,
-            ],
-            compact('room', 'participants')
-        );
+        return response(null, 200);
     }
 }
