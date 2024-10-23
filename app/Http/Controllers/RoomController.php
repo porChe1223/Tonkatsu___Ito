@@ -45,7 +45,7 @@ class RoomController extends Controller
         $user->save();
 
         //GameRoomへの遷移
-        if ($room->player_count == 2) { //揃ったら
+        if ($room->player_count == 3) { //揃ったら
             $room->update(['status' => 'full']); //部屋のステータスを変更
 
             return redirect()->route('GameRoom', ['room' => $room]); //gameroomに遷移・部屋番号を返す
@@ -59,7 +59,7 @@ class RoomController extends Controller
     {
         $room = Room::find($roomId);
 
-        $isFull = $room->participants()->count() == 2; // 参加者が2人以上いるかどうかを確認
+        $isFull = $room->participants()->count() == 3; // 参加者が2人以上いるかどうかを確認
 
         return response()->json(['isFull' => $isFull]);
     }
@@ -102,7 +102,7 @@ class RoomController extends Controller
         $participants = $room->participants;
 
         //Breakoutへの遷移
-        if ($room->player_count == 2) { //揃ったら
+        if ($room->player_count == 3) { //揃ったら
             $room->update(['status' => 'full']); //部屋のステータスを変更
             
             return redirect()->route('goBreakoutRoom', ['room' => $room]); //breakoutroomに遷移・部屋番号を返す
@@ -158,11 +158,28 @@ class RoomController extends Controller
     {
         $room = Room::find($roomId);
 
-        $isFull = $room->participants()->count() == 2;
+        $isFull = $room->participants()->count() == 3;
 
         return response()->json(['isFull' => $isFull]);
     }
 
+
+
+
+    //部屋を抜けたら自分の情報を消す
+    public function removeRoom(Room $room)
+    {
+        $room = Room::where('status', 'waiting')->first(); // 既存の空き部屋を探す
+
+        RoomUser::where('room_id', $room->id) // room_userテーブルからuser_idとroom_idを紐づけた情報を削除
+            ->where('user_id', Auth::id())
+            ->delete();
+
+        $room->player_count -= 1; //部屋のプレイヤーを減らす
+        $room->save(); //DBに保存
+
+        return response(null, 200);
+    }
 
 
 

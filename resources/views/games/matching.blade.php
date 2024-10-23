@@ -14,7 +14,7 @@
         <h1>マッチング中...</h1>
         <p>他の参加者を待っています...</p>
         <h1>参加者</h1>
-        <p font-weight="bold">{{$room->player_count}}</p>
+        <p id="participants" font-weight="bold">{{$room->player_count}}</p>
     </div>
 </body>
 
@@ -34,6 +34,23 @@
                 console.error('Error fetching room status:', error);
             });
     }, 2000); // 1秒ごとにサーバーの状態を確認
+
+    window.addEventListener('beforeunload', (event) => {
+        fetch(`/matching`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}', // CSRFトークンをヘッダーに追加
+                'Content-Type': 'application/json',
+            }
+        }).then(response => {
+            if (!response.ok) {
+                console.error('Failed to remove user from room');
+            }
+        }).catch(error => {
+            console.error('Error:', error);
+        });
+
+    });
 </script>
 
 </html>
