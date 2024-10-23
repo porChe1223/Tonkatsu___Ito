@@ -73,6 +73,8 @@ class GameController extends Controller
         //カード番号選択
         $user = Auth::user();
 
+        $participants = $room->participants; //部屋の参加者を取得
+
         $usedCardNumbers = $participants->pluck('card_number')->toArray(); // 使用済みのカード番号を取得（NULLを除外）
         
         do { // 使用されていないカード番号を見つける
@@ -115,6 +117,8 @@ class GameController extends Controller
 
         //カード番号選択
         $user = Auth::user();
+
+        $participants = $room->participants; //部屋の参加者を取得
 
         $usedCardNumbers = $participants->pluck('card_number')->toArray(); // 使用済みのカード番号を取得（NULLを除外）
         
