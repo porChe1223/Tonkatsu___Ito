@@ -35,7 +35,7 @@ class GameController extends Controller
         //カード番号選択
         $user = Auth::user();
 
-        $usedCardNumbers = User::whereNotNull('card_number')->pluck('card_number')->toArray(); // 使用済みのカード番号を取得（NULLを除外）
+        $usedCardNumbers = $participants->pluck('card_number')->toArray(); // 使用済みのカード番号を取得（NULLを除外）
 
         do { // 使用されていないカード番号を見つける
             $choosed_CardNumber = rand(0, 100);
@@ -73,7 +73,7 @@ class GameController extends Controller
         //カード番号選択
         $user = Auth::user();
 
-        $usedCardNumbers = User::whereNotNull('card_number')->pluck('card_number')->toArray(); // 使用済みのカード番号を取得（NULLを除外）
+        $usedCardNumbers = $participants->pluck('card_number')->toArray(); // 使用済みのカード番号を取得（NULLを除外）
         
         do { // 使用されていないカード番号を見つける
             $choosed_CardNumber = rand(0, 100);
@@ -116,7 +116,7 @@ class GameController extends Controller
         //カード番号選択
         $user = Auth::user();
 
-        $usedCardNumbers = User::whereNotNull('card_number')->pluck('card_number')->toArray(); // 使用済みのカード番号を取得（NULLを除外）
+        $usedCardNumbers = $participants->pluck('card_number')->toArray(); // 使用済みのカード番号を取得（NULLを除外）
         
         do { // 使用されていないカード番号を見つける
             $choosed_CardNumber = rand(0, 100);
