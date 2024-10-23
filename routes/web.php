@@ -32,10 +32,11 @@ Route::post('/makingTheme', [ThemeController::class, 'store'])->name('MakeTheme'
 //マッチング画面
 Route::get('/check-room-status/{room}', [RoomController::class, 'checkRoomStatus']); //人数が揃えばゲーム画面へ遷移・人数が揃わなければ待機
 Route::get('/gameroom/{room}', [GameController::class, 'gameRoom'])->name('GameRoom'); //ゲームルームに入った際にお題と番号をランダム選択
-Route::delete('/matching', [RoomController::class, 'removeRoom'])->name('removeRoom'); //マッチングルームを抜けた際自身の情報を部屋から削除
+Route::delete('/matching', [RoomController::class, 'removeMatchingRoom'])->name('removeMatchingRoom'); //マッチングルームを抜けた際自身の情報を部屋から削除
 
 //ブレイクアウト画面
 Route::get('/check-join-user/{room}', [RoomController::class, 'checkJoinUser']); //部屋に参加しているユーザーを定期的に確認
+Route::delete('/breakout_guest', [RoomController::class, 'removeBreakoutRoom'])->name('removeBreakoutRoom'); //ブレイクアウトルームを抜けた際自身の情報を部屋から削除
 
 //ゲーム画面
 Route::post('/makingTheme/{room}', [ThemeController::class, 'store'])->name('MakeThemeInGame'); //新しいお題を作成
