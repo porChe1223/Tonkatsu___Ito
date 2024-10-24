@@ -49,6 +49,7 @@ Route::get('/get-current-theme/{room}', [ThemeController::class, 'getCurrentThem
 //結果画面関係
 Route::post('/result/host/{room}', [ResultController::class, 'showResult'])->name('goResultRoomHost'); //結果画面(host)へ遷移
 Route::post('/result/guest/{room}', [ResultController::class, 'showResult'])->name('goResultRoomGuest'); //結果画面(guest)へ遷移
-Route::delete('/home', [ResultController::class, 'removeResultRoom'])->name('removeRoom'); //指定されたルームを削除してダッシュボードへリダイレクト
+Route::delete('/result/host/{room}', [ResultController::class, 'removeResultRoom'])->name('removeRoomHost'); //指定されたルームを削除してダッシュボードへリダイレクト
+Route::delete('/result/guest/{room}', [ResultController::class, 'removeResultRoom'])->name('removeRoomGuest'); //指定されたルームを削除してダッシュボードへリダイレクト
 
 require __DIR__ . '/auth.php';

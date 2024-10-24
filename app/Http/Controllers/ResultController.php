@@ -33,7 +33,7 @@ class ResultController extends Controller
         );
     }
 
-    public function removeResultRoom()
+    public function removeResultRoom(Room $room)
     {
         $yourRoomUser = RoomUser::where('user_id', Auth::id())->first(); //自身が登録されているroom_userを取得
 
@@ -51,6 +51,6 @@ class ResultController extends Controller
             }
         }
 
-        return redirect()->route('goHomeRoom')->with('message', 'ゲームが終了しました');
+        return view('games.home', ['room' => $room])->with('message', 'ゲームが終了しました');
     }
 }

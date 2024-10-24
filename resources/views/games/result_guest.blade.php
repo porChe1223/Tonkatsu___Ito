@@ -41,7 +41,7 @@
             @endforeach
         </ul>
 
-        <form action="{{ route('removeRoom') }}" method="POST">
+        <form action="{{ route('removeRoomGuest', $room->id) }}" method="POST">
             @csrf
             @method('DELETE')
             <button type="submit">ゲームを終了</button>
