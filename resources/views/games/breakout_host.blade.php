@@ -21,41 +21,48 @@
 </body>
 
 <script>
-    // Bladeで生成されたルートをJavaScript側で使用できるように設定
-    const checkRoomStatusUrl = "{{ url('/check-room-status/' . $room->id) }}";
-    const redirectToGameRoomHostUrl = "{{ route('goGameRoomHost', ['room' => $room->id]) }}";
+    let isAutoRedirect = false;
 
-    setInterval(function() {
+    setInterval(function(){
         // サーバーに部屋の状態を確認するリクエストを送る
-        fetch(checkRoomStatusUrl)
-            .then(response => response.json())
+        fetch('/check-join-user/{{ $room->id }}')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Room not found');
+                }
+                return response.json();
+            })
             .then(data => {
                 // 部屋が満員かどうかを確認
                 if (data.isFull) {
                     // 部屋が満員になったらプレイ画面にリダイレクト
-                    window.location.href = redirectToGameRoomHostUrl;
+                    window.location.href = '/gameroom_host/{{ $room->id }}';
+                } else {
+                    document.getElementById('participants').textContent = data.player_count; // 取得したプレイヤー数で更新
                 }
             })
             .catch(error => {
                 console.error('Error fetching room status:', error);
             });
-    }, 2000); // 1秒ごとにサーバーの状態を確認
+    }, 500); // 1秒ごとにサーバーの状態を確認
 
     window.addEventListener('beforeunload', (event) => {
-        fetch(`/breakout_host`, {
-            method: 'DELETE',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}', // CSRFトークンをヘッダーに追加
-                'Content-Type': 'application/json',
-            },
-            body:JSON.stringify({ room_id: '{{ $room->id }}'})
-        }).then(response => {
-            if (!response.ok) {
-                console.error('Failed to remove user from room');
-            }
-        }).catch(error => {
-            console.error('Error:', error);
-        });
+        if (!isAutoRedirect || window.location.href != '/gameroom_host/{{ $room->id }}') {
+            fetch(`/breakout_host`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}', // CSRFトークンをヘッダーに追加
+                    'Content-Type': 'application/json',
+                }
+            }).then(response => {
+                if (!response.ok) {
+                    console.error('Failed to remove user from room');
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
     });
 </script>
 </html>
