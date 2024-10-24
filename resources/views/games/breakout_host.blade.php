@@ -36,5 +36,22 @@
                 console.error('Error fetching room status:', error);
             });
     }, 2000); // 1秒ごとにサーバーの状態を確認
+
+    window.addEventListener('beforeunload', (event) => {
+        fetch(`/breakout_host`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}', // CSRFトークンをヘッダーに追加
+                'Content-Type': 'application/json',
+            },
+            body:JSON.stringify({ room_id: '{{ $room->id }}'})
+        }).then(response => {
+            if (!response.ok) {
+                console.error('Failed to remove user from room');
+            }
+        }).catch(error => {
+            console.error('Error:', error);
+        });
+    });
 </script>
 </html>
