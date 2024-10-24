@@ -21,8 +21,6 @@ class MatchingController extends Controller
             ]);
         }
 
-        $room = Room::where('status', 'waiting')->first(); // 部屋作成者のために既存の空き部屋を探す
-
         RoomUser::firstOrCreate([ // 部屋に参加者を追加
             'room_id' => $room->id,
             'user_id' => Auth::id(),
@@ -46,7 +44,7 @@ class MatchingController extends Controller
         $user->save();
 
         //GameRoomへの遷移
-        if ($room->participants()->count() == 3) { //揃ったら
+        if ($room->participants()->count() == 2) { //揃ったら
             $room->update(['status' => 'full']); //部屋のステータスを変更
 
             return redirect()->route('GameRoom', ['room' => $room]); //gameroomに遷移・部屋番号を返す
@@ -60,7 +58,7 @@ class MatchingController extends Controller
     {
         $room = Room::find($roomId);
 
-        $isFull = $room->participants()->count() == 3; // 揃ったかどうかを確認
+        $isFull = $room->participants()->count() == 2; // 揃ったかどうかを確認
 
         return response()->json(['isFull' => $isFull, 'player_count' => $room->player_count]);
     }

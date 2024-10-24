@@ -13,7 +13,7 @@
     <div class="container">
         <h1>マッチング中...</h1>
         <p>他の参加者を待っています...</p>
-        <span id="participants" style="font-weight: bold;">{{$room->player_count}}</span>
+        <span>{{$room->player_count}}</span>
         <span> /4</span>
     </div>
 </body>

@@ -16,7 +16,8 @@
         </h1>
         <p>他の参加者を待っています...</p>
         <h1>参加者</h1>
-        <p font-weight="bold">{{$room->player_count}}</p>
+        <span>{{$room->participants}}</span>
+        <span> /4</span>
     </div>
 </body>
 

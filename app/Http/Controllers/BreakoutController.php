@@ -16,21 +16,22 @@ class BreakoutController extends Controller
     {
         //ルームを作成して待機画面に移動by米田
         $room = Room::create([ // 新しい部屋を作成
-            'status' => 'waiting'
+            'status' => 'waiting',
+            'player_count' => 0,
         ]);
         
-        $room->player_count += 1; //部屋のプレイヤーの増加
-        $room->save(); //DBに保存
-
         RoomUser::firstOrCreate([ // 部屋に参加者を追加
             'room_id' => $room->id,
             'user_id' => Auth::id(),
         ]);
 
-        //カード番号選択
-        $user = Auth::user();
+        $room->player_count += 1; //部屋のプレイヤーの増加
+        $room->save(); //DBに保存
 
         $participants = $room->participants; //部屋の参加者を取得
+
+        //カード番号選択
+        $user = Auth::user();
 
         $usedCardNumbers = $participants->pluck('card_number')->toArray(); // 使用済みのカード番号を取得（NULLを除外）
         
@@ -41,14 +42,8 @@ class BreakoutController extends Controller
         $user->card_number = $choosed_CardNumber; // 選ばれたカード番号をデータベースに保存
         $user->save();
 
-        // みんなのカード番号とそのユーザー情報を取得
-        $room = Room::findOrFail($room->id);
-
-        // Roomモデル内のparticipantsを使用して参加者の一覧を取得
-        $participants = $room->participants;
-
-        //Breakoutへの遷移
-        if ($room->player_count == 3) { //揃ったら
+        //GameRoomへの遷移
+        if ($room->player_count == 2) { //揃ったら
             $room->update(['status' => 'full']); //部屋のステータスを変更
             
             return redirect()->route('GameRoom', ['room' => $room]); //gameroomに遷移・部屋番号を返す
@@ -60,21 +55,21 @@ class BreakoutController extends Controller
     //部屋番号を入力してブレイクアウトルームに参加画面by米田
     public function joinBreakoutRoom(Request $request)
     {
-        $roomId = $request->input('roomId');
+        $roomId = $request->input('roomId'); //入力された部屋番号を保持
         $room = Room::find($roomId);
-
-        $room->player_count += 1; //部屋のプレイヤーの増加
-        $room->save(); //DBに保存
 
         RoomUser::firstOrCreate([ // 部屋に参加者を追加
             'room_id' => $room->id,
             'user_id' => Auth::id(),
         ]);
 
-        //カード番号選択
-        $user = Auth::user();
+        $room->player_count += 1; //部屋のプレイヤーの増加
+        $room->save(); //DBに保存
 
         $participants = $room->participants; //部屋の参加者を取得
+
+        //カード番号選択
+        $user = Auth::user();
 
         $usedCardNumbers = $participants->pluck('card_number')->toArray(); // 使用済みのカード番号を取得（NULLを除外）
         
@@ -84,15 +79,9 @@ class BreakoutController extends Controller
 
         $user->card_number = $choosed_CardNumber; // 選ばれたカード番号をデータベースに保存
         $user->save();
-
-        // みんなのカード番号とそのユーザー情報を取得
-        $room = Room::findOrFail($room->id);
-
-        // Roomモデル内のparticipantsを使用して参加者の一覧を取得
-        $participants = $room->participants;
         
         //GameRoomへの遷移
-        if ($room->player_count == 3) { //揃ったら
+        if ($room->participants()->count() == 2) { //揃ったら
             $room->update(['status' => 'full']); //部屋のステータスを変更
             
             return redirect()->route('GameRoom', ['room' => $room]); //gameroomに遷移
@@ -106,9 +95,9 @@ class BreakoutController extends Controller
     {
         $room = Room::find($roomId);
 
-        $isFull = $room->participants()->count() == 3;
+        $isFull = $room->participants()->count() == 2;
 
-        return response()->json(['isFull' => $isFull]);
+        return response()->json(['isFull' => $isFull, 'player_count' => $room->player_count, 'participants' => $room->participants]);
     }
 
     //ブレイクアウトルームを抜けたら自分の情報を消す
