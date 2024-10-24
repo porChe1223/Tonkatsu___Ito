@@ -19,10 +19,17 @@
 </body>
 
 <script>
+    let isAutoRedirect = false;
+
     setInterval(function(){
         // サーバーに部屋の状態を確認するリクエストを送る
         fetch('/check-room-status/{{ $room->id }}')
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Room not found');
+                }
+                return response.json();
+            })
             .then(data => {
                 // 部屋が満員かどうかを確認
                 if (data.isFull) {
@@ -38,19 +45,21 @@
     }, 500); // 1秒ごとにサーバーの状態を確認
 
     window.addEventListener('beforeunload', (event) => {
-        fetch(`/matching`, {
-            method: 'DELETE',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}', // CSRFトークンをヘッダーに追加
-                'Content-Type': 'application/json',
-            }
-        }).then(response => {
-            if (!response.ok) {
-                console.error('Failed to remove user from room');
-            }
-        }).catch(error => {
-            console.error('Error:', error);
-        });
+        if (!isAutoRedirect || window.location.href != '/gameroom/{{ $room->id }}') {
+            fetch(`/matching`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}', // CSRFトークンをヘッダーに追加
+                    'Content-Type': 'application/json',
+                }
+            }).then(response => {
+                if (!response.ok) {
+                    console.error('Failed to remove user from room');
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        }
 
     });
 </script>
