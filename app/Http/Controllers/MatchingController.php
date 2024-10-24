@@ -19,6 +19,37 @@ class MatchingController extends Controller
                 'status' => 'waiting',
                 'player_count' => 0,
             ]);
+
+            RoomUser::firstOrCreate([ // 部屋に参加者を追加
+                'room_id' => $room->id,
+                'user_id' => Auth::id(),
+            ]);
+
+            $room->player_count += 1; //部屋のプレイヤーの増加
+            $room->save(); //DBに保存
+
+            $participants = $room->participants; //部屋の参加者を取得
+
+            //カード番号選択
+            $user = Auth::user();
+
+            $usedCardNumbers = $participants->pluck('card_number')->toArray(); // 使用済みのカード番号を取得（NULLを除外）
+
+            do { // 使用されていないカード番号を見つける
+                $choosed_CardNumber = rand(0, 100);
+            } while (in_array($choosed_CardNumber, $usedCardNumbers));
+
+            $user->card_number = $choosed_CardNumber; // 選ばれたカード番号をデータベースに保存
+            $user->save();
+
+            //GameRoomへの遷移
+            if ($room->participants()->count() == 2) { //揃ったら
+                $room->update(['status' => 'full']); //部屋のステータスを変更
+
+                return redirect()->route('goGameRoomHost', ['room' => $room]); //gameroomに遷移・部屋番号を返す
+            }
+
+            return view('games.matching', ['room' => $room]); // 揃うまで待機
         }
 
         RoomUser::firstOrCreate([ // 部屋に参加者を追加
@@ -47,7 +78,7 @@ class MatchingController extends Controller
         if ($room->participants()->count() == 2) { //揃ったら
             $room->update(['status' => 'full']); //部屋のステータスを変更
 
-            return redirect()->route('GameRoom', ['room' => $room]); //gameroomに遷移・部屋番号を返す
+            return redirect()->route('goGameRoomGuest', ['room' => $room]); //gameroomに遷移・部屋番号を返す
         }
 
         return view('games.matching', ['room' => $room]); // 揃うまで待機
