@@ -20,10 +20,12 @@
 
 <script>
     let isAutoRedirect = false;
+    const checkRoomStatusUrl = "{{ url('/check-room-status/' . $room->id) }}";
+    const redirectToGameRoomHostUrl = "{{ route('goGameRoomHost', ['room' => $room->id]) }}";
 
     setInterval(function(){
         // サーバーに部屋の状態を確認するリクエストを送る
-        fetch('/check-room-status/{{ $room->id }}')
+        fetch(checkRoomStatusUrl)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Room not found');
@@ -34,7 +36,7 @@
                 // 部屋が満員かどうかを確認
                 if (data.isFull) {
                     // 部屋が満員になったらプレイ画面にリダイレクト
-                    window.location.href = '/gameroom/{{ $room->id }}';
+                    window.location.href = redirectToGameRoomHostUrl;
                 } else {
                     document.getElementById('participants').textContent = data.player_count; // 取得したプレイヤー数で更新
                 }
