@@ -16,17 +16,18 @@ class MatchingController extends Controller
 
         if (!$room) {
             $room = Room::create([ // 新しい部屋を作成
-                'status' => 'waiting'
+                'status' => 'waiting',
+                'player_count' => 0,
             ]);
         }
-
-        $room->player_count += 1; //部屋のプレイヤーの増加
-        $room->save(); //DBに保存
 
         RoomUser::firstOrCreate([ // 部屋に参加者を追加
             'room_id' => $room->id,
             'user_id' => Auth::id(),
         ]);
+
+        $room->player_count += 1; //部屋のプレイヤーの増加
+        $room->save(); //DBに保存
 
         $participants = $room->participants; //部屋の参加者を取得
 
@@ -43,7 +44,7 @@ class MatchingController extends Controller
         $user->save();
 
         //GameRoomへの遷移
-        if ($room->player_count == 3) { //揃ったら
+        if ($room->participants()->count() == 2) { //揃ったら
             $room->update(['status' => 'full']); //部屋のステータスを変更
 
             return redirect()->route('GameRoom', ['room' => $room]); //gameroomに遷移・部屋番号を返す
@@ -57,7 +58,7 @@ class MatchingController extends Controller
     {
         $room = Room::find($roomId);
 
-        $isFull = $room->participants()->count() == 3; // 参加者が2人以上いるかどうかを確認
+        $isFull = $room->participants()->count() == 2; // 揃ったかどうかを確認
 
         return response()->json(['isFull' => $isFull, 'player_count' => $room->player_count]);
     }
