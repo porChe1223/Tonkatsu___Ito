@@ -101,51 +101,24 @@ class BreakoutController extends Controller
     }
 
     //ブレイクアウトルームを抜けたら自分の情報を消す
-    public function removeBreakoutRoom(Request $request)
+    public function removeBreakoutRoom()
     {
-        $roomId = $request->input('room_id');
-        $room = Room::find($roomId); //自身が今入っているroomを取得
+        $yourRoomUser = RoomUser::where('user_id', Auth::id())->first(); //自身が登録されているroom_userを取得
 
-        if ($room) {
-            // RoomUserテーブルからユーザーのデータを削除
-            RoomUser::where('room_id', $room->id)
-                ->where('user_id', Auth::id())
-                ->delete();
-    
-            $room->decrement('player_count');
-            $room->save();
-        
+        if ($yourRoomUser) {
+            $room = Room::find($yourRoomUser->room_id); // 自身が今入っているroomを取得
 
-        // プレイヤーが0人になったら部屋を削除
-            if ($room->player_count <= 0) {
-                $room->delete();
-            }
-        }
+            $yourRoomUser->delete(); // 自身が登録されているroom_userを削除
 
-        return response(null, 200);
-    }
+            $room->player_count -= 1; // 部屋のプレイヤーを減らす
+            $room->save(); // DBに保存
 
-    //ホストが抜けたらその部屋を削除by米田
-    public function destroyBreakoutRoom(Request $request)
-    {
-        $roomId = $request->input('room_id');
-        $room = Room::find($roomId); //自身が今入っているroomを取得
-    
-        if ($room) {
-            RoomUser::where('room_id', $room->id)
-                ->where('user_id', Auth::id())
-                ->delete();
-    
-            $room->decrement('player_count');
-            $room->save();
-    
             // プレイヤーが0人になったら部屋を削除
             if ($room->player_count <= 0) {
                 $room->delete();
             }
         }
-    
+
         return response(null, 200);
-        
     }
 }

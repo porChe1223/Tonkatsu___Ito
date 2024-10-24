@@ -48,7 +48,7 @@
 
     window.addEventListener('beforeunload', (event) => {
         if (!isAutoRedirect || window.location.href != '/gameroom_host/{{ $room->id }}') {
-            fetch(`/breakout_host`, {
+            fetch(`{{ route('removeBreakoutRoomHost') }}`, {
                 method: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}', // CSRFトークンをヘッダーに追加
