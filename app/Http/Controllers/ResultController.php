@@ -13,7 +13,7 @@ class ResultController extends Controller
         $room = Room::findOrFail($room_id); //みんなのカード番号とそのユーザー情報を取得
 
         $participants = $room->participants->sortBy('card_number'); //Roomモデル内のparticipantsを使用して参加者の一覧を取得
-        
+
         $player_order = $request->input('answer'); //プレイヤーの順番（送信された順番）
 
         $correct_order = $participants->pluck('name')->toArray(); //正しい順番（カード番号順で並べたプレイヤー名）
@@ -21,7 +21,7 @@ class ResultController extends Controller
         $isCorrect = $player_order === $correct_order; //プレイヤーの順番が正しいかを判定
 
         return view(
-            'games.result',
+            'games.result_host',
             [
                 'isCorrect' => $isCorrect,
                 'correct_order' => $correct_order,

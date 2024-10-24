@@ -39,8 +39,8 @@ Route::get('/check-join-user/{room}', [BreakoutController::class, 'checkJoinUser
 
 //ゲームルーム関係
 Route::get('/gameroom/{room}', [GameController::class, 'gameRoom'])->name('GameRoom'); //ゲームルームに入った際にお題と番号をランダム選択
-Route::get('/gameroomhost/{room}', [GameController::class, 'goGameRoomHost'])->name('goGameRoomHost'); //ゲームルームに入った際にお題と番号をランダム選択
-Route::get('/gameroomguest/{room}', [GameController::class, 'goGameRoomGuest'])->name('goGameRoomGuest'); //ゲームルームに入った際にお題と番号をランダム選択
+Route::get('/gameroom_host/{room}', [GameController::class, 'goGameRoomHost'])->name('goGameRoomHost'); //ホストがゲームルームに入った際にお題と番号をランダム選択
+Route::get('/gameroom_guest/{room}', [GameController::class, 'goGameRoomGuest'])->name('goGameRoomGuest'); //ゲストがゲームルームに入った際にお題と番号をランダム選択
 
 Route::post('/makingTheme', [ThemeController::class, 'store'])->name('MakeTheme'); //テーマ入力
 Route::post('/makingTheme/{room}', [ThemeController::class, 'store'])->name('MakeThemeInGame'); //新しいお題を作成
