@@ -38,14 +38,17 @@ Route::delete('/breakout_host', [BreakoutController::class, 'destroyBreakoutRoom
 Route::get('/check-join-user/{room}', [BreakoutController::class, 'checkJoinUser']); //ブレイクアウトルームに参加しているユーザーを定期的に確認
 
 //ゲームルーム関係
-Route::get('/gameroom/{room}', [GameController::class, 'goGameRoomHost'])->name('goGameRoomHost'); //ホストがゲームルームに入った際にお題と番号をランダム選択
-Route::get('/gameroom/{room}', [GameController::class, 'goGameRoomGuest'])->name('goGameRoomGuest'); //ゲストがゲームルームに入った際にお題と番号をランダム選択
+Route::get('/gameroom/{room}', [GameController::class, 'gameRoom'])->name('GameRoom'); //ゲームルームに入った際にお題と番号をランダム選択
+Route::get('/gameroom_host/{room}', [GameController::class, 'goGameRoomHost'])->name('goGameRoomHost'); //ホストがゲームルームに入った際にお題と番号をランダム選択
+Route::get('/gameroom_guest/{room}', [GameController::class, 'goGameRoomGuest'])->name('goGameRoomGuest'); //ゲストがゲームルームに入った際にお題と番号をランダム選択
+
 Route::post('/makingTheme', [ThemeController::class, 'store'])->name('MakeTheme'); //テーマ入力
 Route::post('/makingTheme/{room}', [ThemeController::class, 'store'])->name('MakeThemeInGame'); //新しいお題を作成
 Route::get('/get-current-theme/{room}', [ThemeController::class, 'getCurrentTheme']); //現在のお題を更新
 
 //結果画面関係
-Route::post('/result/{room}', [ResultController::class, 'showResult'])->name('goResultRoom'); //結果画面へ遷移
+Route::post('/result/host/{room}', [ResultController::class, 'showResult'])->name('goResultRoomHost'); //結果画面(host)へ遷移
+Route::post('/result/guest/{room}', [ResultController::class, 'showResult'])->name('goResultRoomGuest'); //結果画面(guest)へ遷移
 Route::delete('/home', [ResultController::class, 'destroyRoom'])->name('destroyRoom'); //指定されたルームを削除してダッシュボードへリダイレクト
 
 require __DIR__ . '/auth.php';

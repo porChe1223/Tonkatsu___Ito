@@ -13,7 +13,7 @@
     <script src="result.js"></script>
 
     <div id="all-container">
-        <h1>GameRoom</h1>
+        <h1>Host-GameRoom</h1>
         <!-- ゲーム指示 -->
         <div id="instructions-container">
             <div id="title-container">

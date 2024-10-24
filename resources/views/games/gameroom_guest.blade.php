@@ -13,7 +13,7 @@
     <script src="result.js"></script>
 
     <div id="all-container">
-        <h1>GameRoom</h1>
+        <h1>Guest-GameRoom</h1>
         <!-- ゲーム指示 -->
         <div id="instructions-container">
             <div id="title-container">
@@ -39,7 +39,6 @@
                 </span>
             </div>
         </div>
-        <h1>小さい順に並べよう!!</h1>
         <!-- 以下はチャットルーム -->
         <!-- <div id="chat-container">
                 <div id="chat-left">
@@ -59,19 +58,6 @@
                     <button id="chat-message-send-button">送信</button>
                 </div>
             </div> -->
-        <p>名前を入力</p>
-        <form action="{{ route('goResultRoomHost', ['room' => $room->id]) }}" method="POST">
-            @csrf
-            <table>
-                @foreach ($players as $player)
-                <select name="answer[]">
-                    @foreach ($players as $player)
-                    <option name="player_order[]" value="{{ $player->name }}">{{ $player->name }}</option>
-                    @endforeach
-                </select>
-                @endforeach
-            </table>
-            <button type="submit" class="go-result-button">結果を見る</button>
         </form>
     </div>
 
