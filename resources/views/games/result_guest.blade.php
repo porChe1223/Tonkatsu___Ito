@@ -17,9 +17,6 @@
         <p>残念！順番が間違っています。</p>
         @endif
 
-
-
-
         <table>
             <thead>
                 <tr>
@@ -44,7 +41,9 @@
             @endforeach
         </ul>
 
-        <form action="{{ route('goHomeRoom') }}" method="GET">
+        <form action="{{ route('removeRoom') }}" method="POST">
+            @csrf
+            @method('DELETE')
             <button type="submit">ゲームを終了</button>
         </form>
 </body>
