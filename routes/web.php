@@ -34,6 +34,7 @@ Route::delete('/matching', [MatchingController::class, 'removeMatchingRoom'])->n
 Route::post('/breakout_host', [BreakoutController::class, 'makeBreakoutRoom'])->name('makeBreakoutRoom'); //ブレイクアウトルームを作成
 Route::post('/breakout_guest', [BreakoutController::class, 'joinBreakoutRoom'])->name('joinBreakoutRoom'); //ブレイクアウトルームへ参加
 Route::delete('/breakout_guest', [BreakoutController::class, 'removeBreakoutRoom'])->name('removeBreakoutRoom'); //ブレイクアウトルームを抜けた際自身の情報を部屋から削除
+Route::delete('/breakout_host', [BreakoutController::class, 'destroyBreakoutRoom'])->name('destroyBreakoutRoom'); //ホストが抜けたら部屋削除by米田
 Route::get('/check-join-user/{room}', [BreakoutController::class, 'checkJoinUser']); //ブレイクアウトルームに参加しているユーザーを定期的に確認
 
 //ゲームルーム関係
