@@ -21,15 +21,19 @@
 </body>
 
 <script>
-    setInterval(function(){
+    // Bladeで生成されたルートをJavaScript側で使用できるように設定
+    const checkRoomStatusUrl = "{{ url('/check-room-status/' . $room->id) }}";
+    const redirectToGameRoomHostUrl = "{{ route('goGameRoomHost', ['room' => $room->id]) }}";
+
+    setInterval(function() {
         // サーバーに部屋の状態を確認するリクエストを送る
-        fetch('/check-room-status/{{ $room->id }}')
+        fetch(checkRoomStatusUrl)
             .then(response => response.json())
             .then(data => {
                 // 部屋が満員かどうかを確認
                 if (data.isFull) {
                     // 部屋が満員になったらプレイ画面にリダイレクト
-                    window.location.href = '/gameroom/{{ $room->id }}';
+                    window.location.href = redirectToGameRoomHostUrl;
                 }
             })
             .catch(error => {
