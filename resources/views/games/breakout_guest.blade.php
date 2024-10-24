@@ -30,7 +30,7 @@
                 // 部屋が満員かどうかを確認
                 if (data.isFull) {
                     // 部屋が満員になったらプレイ画面にリダイレクト
-                    window.location.href = '/gameroom/{{ $room->id }}';
+                    window.location.href = '/gameroom_guest/{{ $room->id }}';
                 }
             })
             .catch(error => {
