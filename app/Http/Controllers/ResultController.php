@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Room;
+use App\Models\RoomUser;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class ResultController extends Controller
@@ -31,19 +33,24 @@ class ResultController extends Controller
         );
     }
 
-
-    //ゲームが終了した部屋は削除
-    public function destroyRoom(Room $room)
+    public function removeResultRoom(Room $room)
     {
-        $participants = $room->participants; //参加者のリストを取得
-        //ここに何もユーザの情報が入っていない
+        $yourRoomUser = RoomUser::where('user_id', Auth::id())->first(); //自身が登録されているroom_userを取得
 
-        $room->delete(); //部屋を削除
+        if ($yourRoomUser) {
+            $room = Room::find($yourRoomUser->room_id); // 自身が今入っているroomを取得
 
-        foreach ($participants as $participant) { // 参加者全員に部屋が削除されたことを通知する処理を追加
-            session()->put('room_deleted', true); //セッションにメッセージをセットして、ユーザーをリダイレクト
+            $yourRoomUser->delete(); // 自身が登録されているroom_userを削除
+
+            $room->player_count -= 1; // 部屋のプレイヤーを減らす
+            $room->save(); // DBに保存
+
+            // プレイヤーが0人になったら部屋を削除
+            if ($room->player_count <= 0) {
+                $room->delete();
+            }
         }
 
-        return redirect()->route('goHomeRoom')->with('message', 'ゲームが終了しました');
+        return view('games.home', ['room' => $room])->with('message', 'ゲームが終了しました');
     }
 }
