@@ -23,15 +23,6 @@
                 </span>
             </div>
 
-            <div>
-                <p>自分で考えたお題で遊ぶ！</p>
-                <form action="{{ route('MakeThemeInGame', ['room' => $room->id]) }}" method="POST">
-                    @csrf
-                    <input type="text" id="ThemeIdea" name="ThemeIdea">
-                    <button type="submit" class="btn btn-primary">お題を変更</button>
-                </form>
-            </div>
-
             <div id="card_number-container">
                 <div class="instructions">あなたのカード番号</div>
                 <span id="card-number">
@@ -60,28 +51,52 @@
             </div> -->
         </form>
     </div>
-
-
-    <script>
-        $(document).ready(function() {
-            // 1秒ごとにサーバーからお題を取得して更新
-            setInterval(function() {
-                let roomId = "{{ $room->id }}"; // 部屋のIDをBladeテンプレートから取得
-
-                $.ajax({
-                    url: "/get-current-theme/" + roomId, // お題取得用のルート
-                    type: "GET",
-                    success: function(response) {
-                        // サーバーから取得したお題で表示を更新
-                        $('#theme').text(response.currentTheme);
-                    },
-                    error: function(xhr) {
-                        console.log("お題の取得に失敗しました。");
-                    }
-                });
-            }, 2000); // 1秒ごとに実行
-        });
-    </script>
 </body>
+
+<script>
+
+    $(document).ready(function() {
+        // 1秒ごとにサーバーからお題を取得して更新
+        setInterval(function() {
+            let roomId = "{{ $room->id }}"; // 部屋のIDをBladeテンプレートから取得
+
+            $.ajax({
+                url: "/get-current-theme/" + roomId, // お題取得用のルート
+                type: "GET",
+                success: function(response) {
+                    // サーバーから取得したお題で表示を更新
+                    $('#theme').text(response.currentTheme);
+                },
+                error: function(xhr) {
+                    console.log("お題の取得に失敗しました。");
+                }
+            });
+        }, 2500); // 1秒ごとに実行
+    });
+
+
+
+    window.addEventListener('beforeunload', (event) => {
+        if (!isAutoRedirect && window.location.href !== '/result_guest/{{ $room->id }}') {
+            fetch(`{{ route('removeGameRoomGuest', ['room' => $room->id]) }}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}', // CSRFトークンをヘッダーに追加
+                    'Content-Type': 'application/json',
+                }
+            }).then(response => {
+                if (!response.ok) {
+                    console.error('Failed to remove user from room');
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    });
+
+    window.addEventListener('load', () => {
+        isAutoRedirect = false; // ページが読み込まれたら元に戻す
+    });
+</script>
 
 </html>

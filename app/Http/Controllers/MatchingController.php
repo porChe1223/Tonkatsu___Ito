@@ -12,6 +12,21 @@ class MatchingController extends Controller
     //マッチング画面
     public function goMatchingRoom(User $user)
     {
+        //エラー対策として、まずは過去の自分の部屋データを削除
+        while($yourRoomUser = RoomUser::where('user_id', Auth::id())->first()){ //自身が登録されているroom_userがある限り
+            $room = Room::find($yourRoomUser->room_id); // 自身が今入っているroomを取得
+
+            $yourRoomUser->delete(); // 自身が登録されているroom_userを削除
+
+            $room->player_count -= 1; // 部屋のプレイヤーを減らす
+            $room->save(); // DBに保存
+
+            // プレイヤーが0人になったら部屋を削除
+            if ($room->player_count <= 0) {
+                $room->delete();
+            }
+        }
+
         $room = Room::where('status', 'waiting')->first(); // 既存の空き部屋を探す
 
         if (!$room) {
@@ -66,21 +81,19 @@ class MatchingController extends Controller
     //マッチングルームを抜けたら自分の情報を消す
     public function removeMatchingRoom()
     {
-        $yourRoomUser = RoomUser::where('user_id', Auth::id())->first(); //自身が登録されているroom_userを取得
+        while($yourRoomUser = RoomUser::where('user_id', Auth::id())->first()){ //自身が登録されているroom_userがある限り
+            $room = Room::find($yourRoomUser->room_id); // 自身が今入っているroomを取得
 
-        if ($yourRoomUser) {
-        $room = Room::find($yourRoomUser->room_id); // 自身が今入っているroomを取得
+            $yourRoomUser->delete(); // 自身が登録されているroom_userを削除
 
-        $yourRoomUser->delete(); // 自身が登録されているroom_userを削除
+            $room->player_count -= 1; // 部屋のプレイヤーを減らす
+            $room->save(); // DBに保存
 
-        $room->player_count -= 1; // 部屋のプレイヤーを減らす
-        $room->save(); // DBに保存
-
-        // プレイヤーが0人になったら部屋を削除
-        if ($room->player_count <= 0) {
-            $room->delete();
+            // プレイヤーが0人になったら部屋を削除
+            if ($room->player_count <= 0) {
+                $room->delete();
+            }
         }
-    }
 
         return response(null, 200);
     }

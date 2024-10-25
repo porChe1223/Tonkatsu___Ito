@@ -64,15 +64,20 @@ class GameController extends Controller
 
     public function removeGameRoom(Room $room)
     {
-        $yourRoomUser = RoomUser::where('user_id', Auth::id())->first(); //自身が登録されているroom_userを取得
-        $room = Room::find($yourRoomUser->room_id); //自身が今入っているroomを取得
+        while($yourRoomUser = RoomUser::where('user_id', Auth::id())->first()){ //自身が登録されているroom_userがある限り
+            $room = Room::find($yourRoomUser->room_id); // 自身が今入っているroomを取得
 
-        $yourRoomUser->delete(); //自身が登録されているroom_userを削除
-        
+            $yourRoomUser->delete(); // 自身が登録されているroom_userを削除
 
-        $room->player_count -= 1; //部屋のプレイヤーを減らす
-        $room->save(); //DBに保存
+            $room->player_count -= 1; // 部屋のプレイヤーを減らす
+            $room->save(); // DBに保存
 
-        return response(null, 200);
+            // プレイヤーが0人になったら部屋を削除
+            if ($room->player_count <= 0) {
+                $room->delete();
+            }
+        }
+
+        return view('games.home', ['room' => $room])->with('message', 'ゲームを退出しました');
     }
 }

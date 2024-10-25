@@ -33,6 +33,7 @@
             .then(data => {
                 // 部屋が満員かどうかを確認
                 if (data.isFull) {
+                    isAutoRedirect = true;
                     // 部屋が満員になったらプレイ画面にリダイレクト
                     window.location.href = '/gameroom/{{ $room->id }}';
                 } else {
@@ -45,8 +46,8 @@
     }, 500); // 1秒ごとにサーバーの状態を確認
 
     window.addEventListener('beforeunload', (event) => {
-        if (!isAutoRedirect || window.location.href != '/gameroom/{{ $room->id }}') {
-            fetch(`/matching`, {
+        if (!isAutoRedirect && window.location.href !== '/gameroom/{{ $room->id }}') {
+            fetch(`{{route('removeMatchingRoom')}}`, {
                 method: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}', // CSRFトークンをヘッダーに追加
@@ -61,6 +62,10 @@
             });
         }
 
+    });
+
+    window.addEventListener('load', () => {
+        isAutoRedirect = false; // ページが読み込まれたら元に戻す
     });
 </script>
 

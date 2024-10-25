@@ -31,7 +31,6 @@
                     <button type="submit" class="btn btn-primary">お題を変更</button>
                 </form>
             </div>
-
             <div id="card_number-container">
                 <div class="instructions">あなたのカード番号</div>
                 <span id="card-number">
@@ -74,28 +73,68 @@
             <button type="submit" class="go-result-button">結果を見る</button>
         </form>
     </div>
-
-
-    <script>
-        $(document).ready(function() {
-            // 1秒ごとにサーバーからお題を取得して更新
-            setInterval(function() {
-                let roomId = "{{ $room->id }}"; // 部屋のIDをBladeテンプレートから取得
-
-                $.ajax({
-                    url: "/get-current-theme/" + roomId, // お題取得用のルート
-                    type: "GET",
-                    success: function(response) {
-                        // サーバーから取得したお題で表示を更新
-                        $('#theme').text(response.currentTheme);
-                    },
-                    error: function(xhr) {
-                        console.log("お題の取得に失敗しました。");
-                    }
-                });
-            }, 2000); // 1秒ごとに実行
-        });
-    </script>
 </body>
+
+<script>
+    //ホストのページ遷移時の部屋情報処理ができていない
+    $(document).ready(function() {
+        // 1秒ごとにサーバーからお題を取得して更新
+        setInterval(function() {
+            let roomId = "{{ $room->id }}"; // 部屋のIDをBladeテンプレートから取得
+
+            $.ajax({
+                url: "/get-current-theme/" + roomId, // お題取得用のルート
+                type: "GET",
+                success: function(response) {
+                    // サーバーから取得したお題で表示を更新
+                    $('#theme').text(response.currentTheme);
+                },
+                error: function(xhr) {
+                    console.log("お題の取得に失敗しました。");
+                }
+            });
+        }, 2500); // 1秒ごとに実行
+    });
+
+    setInterval(function(){
+        // サーバーに部屋の状態を確認するリクエストを送る
+        fetch('/check-join-user/{{ $room->id }}')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Room not found');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // 部屋が満員かどうかを確認
+                if (data.isFull) {
+                    isAutoRedirect = true;
+                } else {
+                    document.getElementById('participants').textContent = data.player_count; // 取得したプレイヤー数で更新
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching room status:', error);
+            });
+    }, 500); // 1秒ごとにサーバーの状態を確認
+    
+    window.addEventListener('beforeunload', (event) => {
+        if (!isAutoRedirect && window.location.href !== '/result_host/{{ $room->id }}') {
+            fetch(`{{ route('removeGameRoomHost', ['room' => $room->id]) }}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}', // CSRFトークンをヘッダーに追加
+                    'Content-Type': 'application/json',
+                }
+            }).then(response => {
+                if (!response.ok) {
+                    console.error('Failed to remove user from room');
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    });
+</script>
 
 </html>
