@@ -37,8 +37,8 @@
                 </span>
             </div>
         </div>
-        <h1>小さい順に並べよう!!</h1>
         <div id="chat-container" class="mt-4">
+            <h2>チャット欄</h2>
             <div id="chat-box" class="border p-3 mb-3" style="height: 300px; overflow-y: scroll;">
                 <!-- メッセージがここに表示されます -->
             </div>
@@ -48,6 +48,7 @@
                 <button type="submit" class="btn btn-primary">送信</button>
             </form>
         </div>
+        <h2>小さい順に並べよう!!</h2>
 
         <!-- 結果を見るボタン -->
         <form action="{{ route('goResultRoom', ['room' => $room->id]) }}" method="POST" class="mt-4">
