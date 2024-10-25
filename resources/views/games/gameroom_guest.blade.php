@@ -54,6 +54,7 @@
 </body>
 
 <script>
+
     $(document).ready(function() {
         // 1秒ごとにサーバーからお題を取得して更新
         setInterval(function() {
@@ -70,11 +71,13 @@
                     console.log("お題の取得に失敗しました。");
                 }
             });
-        }, 5000); // 1秒ごとに実行
+        }, 2500); // 1秒ごとに実行
     });
 
+
+
     window.addEventListener('beforeunload', (event) => {
-        if (!isAutoRedirect || window.location.href != '/result_guest/{{ $room->id }}') {
+        if (!isAutoRedirect && window.location.href !== '/result_guest/{{ $room->id }}') {
             fetch(`{{ route('removeGameRoomGuest', ['room' => $room->id]) }}`, {
                 method: 'DELETE',
                 headers: {
@@ -89,6 +92,10 @@
                 console.error('Error:', error);
             });
         }
+    });
+
+    window.addEventListener('load', () => {
+        isAutoRedirect = false; // ページが読み込まれたら元に戻す
     });
 </script>
 
