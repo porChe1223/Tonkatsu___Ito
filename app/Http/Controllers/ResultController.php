@@ -14,6 +14,8 @@ class ResultController extends Controller
     {
         $room = Room::findOrFail($room_id); //みんなのカード番号とそのユーザー情報を取得
 
+        $room->update(['status' => 'finish']); //部屋のステータスを変更
+
         $participants = $room->participants->sortBy('card_number'); //Roomモデル内のparticipantsを使用して参加者の一覧を取得
 
         $player_order = $request->input('answer'); //プレイヤーの順番（送信された順番）

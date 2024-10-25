@@ -172,6 +172,29 @@
             return date.toLocaleString();
         }
     });
+
+    setInterval(function(){
+        // サーバーに部屋の状態を確認するリクエストを送る
+        fetch('/check-gameroom-status/{{ $room->id }}')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Room not found');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("データ来てるよ");
+                // 部屋が終了しているかどうかを確認
+                if (data.isFinish) {
+                    // 部屋が終了になったらリザルト画面（ゲスト）にリダイレクト
+                    window.location.href = '/result_guest/{{ $room->id }}';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching room status:', error);
+            });
+    }, 500); // 1秒ごとにサーバーの状態を確認
+
 </script>
 
     <!-- 必要なJavaScriptライブラリの読み込み -->

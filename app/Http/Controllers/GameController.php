@@ -80,4 +80,14 @@ class GameController extends Controller
 
         return view('games.home', ['room' => $room])->with('message', 'ゲームを退出しました');
     }
+
+    // マッチングルームの状態を確認するAPI
+    public function checkGameroomStatus($roomId)
+    {
+        $room = Room::find($roomId);
+        $isFinish = $room->status == "finish"; // 揃ったかどうかを確認
+
+        return response()->json(['isFinish' => $isFinish]);
+    }
+
 }
