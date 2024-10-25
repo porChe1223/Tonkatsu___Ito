@@ -47,7 +47,7 @@
             .catch(error => {
                 console.error('Error fetching room status:', error);
             });
-    }, 5000); // 1秒ごとにサーバーの状態を確認
+    }, 500); // 1秒ごとにサーバーの状態を確認
 
     window.addEventListener('beforeunload', (event) => {
         if (!isAutoRedirect && window.location.pathname !== `/gameroom_guest/{{ $room->id }}`) {
