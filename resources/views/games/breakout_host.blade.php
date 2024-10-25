@@ -51,7 +51,7 @@
     }, 5000); // 1秒ごとにサーバーの状態を確認
 
     window.addEventListener('beforeunload', (event) => {
-        if (!isAutoRedirect || window.location.href != '/gameroom_host/{{ $room->id }}') {
+        if (!isAutoRedirect && window.location.pathname !== `/gameroom_host/{{ $room->id }}`) {
             fetch(`{{ route('removeBreakoutRoomHost') }}`, {
                 method: 'DELETE',
                 headers: {

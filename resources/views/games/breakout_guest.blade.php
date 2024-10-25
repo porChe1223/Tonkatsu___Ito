@@ -37,7 +37,7 @@
             .then(data => {
                 // 部屋が満員かどうかを確認
                 if (data.isFull) {
-                    // isAutoRedirect = true;
+                    isAutoRedirect = true;
                     // 部屋が満員になったらプレイ画面にリダイレクト
                     window.location.href = '/gameroom_guest/{{ $room->id }}';
                 } else {
@@ -50,7 +50,7 @@
     }, 5000); // 1秒ごとにサーバーの状態を確認
 
     window.addEventListener('beforeunload', (event) => {
-        if (!isAutoRedirect || window.location.href != '/gameroom_guest/{{ $room->id }}') {
+        if (!isAutoRedirect && window.location.pathname !== `/gameroom_guest/{{ $room->id }}`) {
             fetch(`{{ route('removeBreakoutRoomGuest') }}`, {
                 method: 'DELETE',
                 headers: {
@@ -68,8 +68,8 @@
 
     });
 
-    // window.addEventListener('load', () => {
-    //     isAutoRedirect = false; // ページが読み込まれたら元に戻す
-    // });
+    window.addEventListener('load', () => {
+        isAutoRedirect = false; // ページが読み込まれたら元に戻す
+    });
 </script>
 </html>
