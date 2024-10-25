@@ -51,4 +51,10 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Room::class)->withTimestamps();
     }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
+    }
+
 }
