@@ -109,8 +109,6 @@
                 // 部屋が満員かどうかを確認
                 if (data.isFull) {
                     isAutoRedirect = true;
-                    // 部屋が満員になったらプレイ画面にリダイレクト
-                    window.location.href = '/gameroom_guest/{{ $room->id }}';
                 } else {
                     document.getElementById('participants').textContent = data.player_count; // 取得したプレイヤー数で更新
                 }
