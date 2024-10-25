@@ -20,7 +20,7 @@ class ThemeController extends Controller
         $room->theme_id = $newTheme->id;
         $room->save();
 
-        return redirect()->route('GameRoom', ['room' => $roomId]);
+        return redirect()->route('goGameRoomHost', ['room' => $roomId]);
     }
 
     public function getCurrentTheme($roomId)
