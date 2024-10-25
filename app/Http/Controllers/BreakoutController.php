@@ -14,6 +14,21 @@ class BreakoutController extends Controller
     //ブレイクアウトルーム作成画面
     public function makeBreakoutRoom(User $user, Room $room)
     {
+        //エラー対策として、まずは過去の自分の部屋データを削除
+        while($yourRoomUser = RoomUser::where('user_id', Auth::id())->first()){ //自身が登録されているroom_userがある限り
+            $room = Room::find($yourRoomUser->room_id); // 自身が今入っているroomを取得
+
+            $yourRoomUser->delete(); // 自身が登録されているroom_userを削除
+
+            $room->player_count -= 1; // 部屋のプレイヤーを減らす
+            $room->save(); // DBに保存
+
+            // プレイヤーが0人になったら部屋を削除
+            if ($room->player_count <= 0) {
+                $room->delete();
+            }
+        }
+
         //ルームを作成して待機画面に移動by米田
         $room = Room::create([ // 新しい部屋を作成
             'status' => 'waiting',
@@ -55,6 +70,21 @@ class BreakoutController extends Controller
     //部屋番号を入力してブレイクアウトルームに参加画面by米田
     public function joinBreakoutRoom(Request $request)
     {
+        //エラー対策として、まずは過去の自分の部屋データを削除
+        while($yourRoomUser = RoomUser::where('user_id', Auth::id())->first()){ //自身が登録されているroom_userがある限り
+            $room = Room::find($yourRoomUser->room_id); // 自身が今入っているroomを取得
+
+            $yourRoomUser->delete(); // 自身が登録されているroom_userを削除
+
+            $room->player_count -= 1; // 部屋のプレイヤーを減らす
+            $room->save(); // DBに保存
+
+            // プレイヤーが0人になったら部屋を削除
+            if ($room->player_count <= 0) {
+                $room->delete();
+            }
+        }
+
         $roomId = $request->input('roomId'); //入力された部屋番号を保持
         $room = Room::find($roomId);
 
@@ -103,9 +133,7 @@ class BreakoutController extends Controller
     //ブレイクアウトルームを抜けたら自分の情報を消す
     public function removeBreakoutRoom()
     {
-        $yourRoomUser = RoomUser::where('user_id', Auth::id())->first(); //自身が登録されているroom_userを取得
-
-        if ($yourRoomUser) {
+        while($yourRoomUser = RoomUser::where('user_id', Auth::id())->first()){ //自身が登録されているroom_userがある限り
             $room = Room::find($yourRoomUser->room_id); // 自身が今入っているroomを取得
 
             $yourRoomUser->delete(); // 自身が登録されているroom_userを削除
