@@ -25,10 +25,10 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($participants as $participant)
+                @foreach(json_decode($room->member_list) as $member)
                 <tr class="card-number">
-                    <td>{{ $participant->name }}</td>
-                    <td>{{ $participant->card_number }}</td>
+                    <td>{{ $member->name }}</td>
+                    <td>{{ $member->card_number }}</td>
                 </tr>
                 @endforeach
             </tbody>

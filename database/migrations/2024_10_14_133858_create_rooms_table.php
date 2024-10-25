@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('theme_id')->nullable(); //各部屋にテーマを保存
             $table->json
             ('player_order')->nullable();   //Hostが選択した順番を保存
+            $table->json('member_list')->nullable(); // 参加者リストをJSON形式で保存
             $table->timestamps();
         });
     }
