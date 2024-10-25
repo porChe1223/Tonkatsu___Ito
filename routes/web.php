@@ -7,6 +7,7 @@ use App\Http\Controllers\GameController;
 use App\Http\Controllers\ThemeController;
 use App\Http\Controllers\BreakoutController;
 use App\Http\Controllers\ResultController;
+use App\Http\Controllers\ChatController;
 use Illuminate\Support\Facades\Route;
 
 //ユーザ関係
@@ -53,5 +54,15 @@ Route::post('/result_host/{room}', [ResultController::class, 'showResult'])->nam
 Route::post('/result_guest/{room}', [ResultController::class, 'showResult'])->name('goResultRoomGuest'); //結果画面(guest)へ遷移
 Route::delete('/result_host/{room}/remove', [ResultController::class, 'removeResultRoom'])->name('removeRoomHost'); //指定されたルームを削除してダッシュボードへリダイレクト
 Route::delete('/result_guest/{room}/remove', [ResultController::class, 'removeResultRoom'])->name('removeRoomGuest'); //指定されたルームを削除してダッシュボードへリダイレクト
+
+// チャット関係
+// チャットルームの表示
+Route::get('/chat/{roomId}', [ChatController::class, 'index'])->middleware('auth')->name('chat.index');
+
+// メッセージの取得
+Route::get('/chat/{roomId}/messages', [ChatController::class, 'fetchMessages'])->middleware('auth')->name('chat.fetchMessages');
+
+// メッセージの送信
+Route::post('/chat/{roomId}/messages', [ChatController::class, 'sendMessage'])->middleware('auth')->name('chat.sendMessage');
 
 require __DIR__ . '/auth.php';
