@@ -16,8 +16,9 @@
         </h1>
         <p>他の参加者を待っています...</p>
         <h1>参加者</h1>
-        <span>{{$room->participants}}</span>
-        <span> /4</span>
+        @foreach($room->participants as $participant)
+                    <li>{{ $participant['name']}}</li>
+        @endforeach
     </div>
 </body>
 
@@ -36,6 +37,7 @@
             .then(data => {
                 // 部屋が満員かどうかを確認
                 if (data.isFull) {
+                    // isAutoRedirect = true;
                     // 部屋が満員になったらプレイ画面にリダイレクト
                     window.location.href = '/gameroom_guest/{{ $room->id }}';
                 } else {
@@ -45,7 +47,7 @@
             .catch(error => {
                 console.error('Error fetching room status:', error);
             });
-    }, 500); // 1秒ごとにサーバーの状態を確認
+    }, 5000); // 1秒ごとにサーバーの状態を確認
 
     window.addEventListener('beforeunload', (event) => {
         if (!isAutoRedirect || window.location.href != '/gameroom_guest/{{ $room->id }}') {
@@ -65,5 +67,9 @@
         }
 
     });
+
+    // window.addEventListener('load', () => {
+    //     isAutoRedirect = false; // ページが読み込まれたら元に戻す
+    // });
 </script>
 </html>
