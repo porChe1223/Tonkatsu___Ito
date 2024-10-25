@@ -48,4 +48,26 @@
         </form>
 </body>
 
+<script>
+let isAutoRedirect = false;
+
+window.addEventListener('beforeunload', (event) => {
+    if (!isAutoRedirect) {
+        fetch(`{{ route('removeGameRoomGuest', ['room' => $room->id]) }}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}', // CSRFトークンをヘッダーに追加
+                'Content-Type': 'application/json',
+            }
+        }).then(response => {
+            if (!response.ok) {
+                console.error('Failed to remove user from room');
+            }
+        }).catch(error => {
+            console.error('Error:', error);
+        });
+    }
+});
+</script>
+
 </html>
