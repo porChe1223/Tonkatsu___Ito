@@ -74,28 +74,48 @@
             <button type="submit" class="go-result-button">結果を見る</button>
         </form>
     </div>
-
-
-    <script>
-        $(document).ready(function() {
-            // 1秒ごとにサーバーからお題を取得して更新
-            setInterval(function() {
-                let roomId = "{{ $room->id }}"; // 部屋のIDをBladeテンプレートから取得
-
-                $.ajax({
-                    url: "/get-current-theme/" + roomId, // お題取得用のルート
-                    type: "GET",
-                    success: function(response) {
-                        // サーバーから取得したお題で表示を更新
-                        $('#theme').text(response.currentTheme);
-                    },
-                    error: function(xhr) {
-                        console.log("お題の取得に失敗しました。");
-                    }
-                });
-            }, 2000); // 1秒ごとに実行
-        });
-    </script>
 </body>
+
+<script>
+let isAutoRedirect = false;
+
+
+$(document).ready(function() {
+    // 1秒ごとにサーバーからお題を取得して更新
+    setInterval(function() {
+        let roomId = "{{ $room->id }}"; // 部屋のIDをBladeテンプレートから取得
+
+        $.ajax({
+            url: "/get-current-theme/" + roomId, // お題取得用のルート
+            type: "GET",
+            success: function(response) {
+                // サーバーから取得したお題で表示を更新
+                $('#theme').text(response.currentTheme);
+            },
+            error: function(xhr) {
+                console.log("お題の取得に失敗しました。");
+            }
+        });
+    }, 5000); // 1秒ごとに実行
+});
+
+window.addEventListener('beforeunload', (event) => {
+    if (!isAutoRedirect || window.location.href != '/result_host/{{ $room->id }}') {
+        fetch(`{{ route('removeGameRoomHost', ['room' => $room->id]) }}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}', // CSRFトークンをヘッダーに追加
+                'Content-Type': 'application/json',
+            }
+        }).then(response => {
+            if (!response.ok) {
+                console.error('Failed to remove user from room');
+            }
+        }).catch(error => {
+            console.error('Error:', error);
+        });
+    }
+});
+</script>
 
 </html>
