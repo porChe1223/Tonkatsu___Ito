@@ -35,7 +35,7 @@
                 if (data.isFull) {
                     isAutoRedirect = true;
                     // 部屋が満員になったらプレイ画面にリダイレクト
-                    window.location.href = '/gameroom/{{ $room->id }}';
+                    window.location.href = '/gameroom_host/{{ $room->id }}';
                 } else {
                     document.getElementById('participants').textContent = data.player_count; // 取得したプレイヤー数で更新
                 }
@@ -46,7 +46,7 @@
     }, 500); // 1秒ごとにサーバーの状態を確認
 
     window.addEventListener('beforeunload', (event) => {
-        if (!isAutoRedirect && window.location.href !== '/gameroom/{{ $room->id }}') {
+        if (!isAutoRedirect && window.location.href !== ('/gameroom_host/{{ $room->id }}' || '/gameroom_guest/{{ $room->id }}')) {
             fetch(`{{route('removeMatchingRoom')}}`, {
                 method: 'DELETE',
                 headers: {

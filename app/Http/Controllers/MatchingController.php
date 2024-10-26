@@ -63,7 +63,7 @@ class MatchingController extends Controller
                 return redirect()->route('goGameRoomHost', ['room' => $room]); //gameroomに遷移・部屋番号を返す
             }
 
-            return view('games.matching', ['room' => $room]); // 揃うまで待機
+            
         } else {
             $room->player_count += 1;
             $room->save(); //DBに保存
@@ -90,6 +90,7 @@ class MatchingController extends Controller
 
             return redirect()->route('goGameRoomGuest', ['room' => $room]);
         }
+        return view('games.matching', ['room' => $room]); // 揃うまで待機
     }
 
     // マッチングルームの状態を確認するAPI
