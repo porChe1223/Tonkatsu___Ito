@@ -61,7 +61,9 @@ Route::post('/result/{room}', [ResultController::class, 'showResult'])->name('go
 Route::post('/result_host/{room}', [ResultController::class, 'showResultHost'])->name('goResultRoomHost'); //結果画面(host)へ遷移
 Route::get('/result_guest/{room}', [ResultController::class, 'showResultGuest'])->name('goResultRoomGuest'); //結果画面(guest)へ遷移
 Route::post('/result_guest/{room}', [ResultController::class, 'showResult'])->name('goResultRoom'); 
-Route::delete('/result_host/{room}/remove', [ResultController::class, 'removeResultRoom'])->name('removeRoomHost'); //指定されたルームを削除してダッシュボードへリダイレクト
-Route::delete('/result_guest/{room}/remove', [ResultController::class, 'removeResultRoom'])->name('removeRoomGuest'); //指定されたルームを削除してダッシュボードへリダイレクト
+Route::delete('/result_host/{room}/remove', [ResultController::class, 'removeResultRoomHost'])->name('removeRoomHost'); //指定されたルームを削除してダッシュボードへリダイレクト
+Route::delete('/result_guest/{room}/remove', [ResultController::class, 'removeResultRoomGuest'])->name('removeRoomGuest'); //指定されたルームを削除してダッシュボードへリダイレクト
+//結果画面関係
+Route::get('/check-result-status/{room}', [ResultController::class, 'checkResultStatus']); //resultがコンテニューを選んだかどうかを判定
 
 require __DIR__ . '/auth.php';
