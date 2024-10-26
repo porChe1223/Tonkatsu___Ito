@@ -54,7 +54,9 @@
                 return response.json();
             })
             .then(data => {
-                if (data.isReady) { // ゲームが始めれるかどうかを確認
+                if (data.isStarted){ // ゲームがスタートしたらプレイ画面にリダイレクト
+                    window.location.href = '/gameroom_host/{{ $room->id }}';
+                } else if (data.isReady) { // ゲームが始めれるかどうかを確認
                     isAutoRedirect = true;
                     document.getElementById('startButton').style.display = 'block';
                 } else {
@@ -67,7 +69,7 @@
     }, 500); // 1秒ごとにサーバーの状態を確認
 
     window.addEventListener('beforeunload', (event) => {
-        if (!isAutoRedirect && window.location.pathname !== `/gameroom_host/{{ $room->id }}`) {
+        if (!isAutoRedirect && window.location.pathname !== `/result_host/{{ $room->id }}`) {
             fetch(`{{ route('removeBreakoutRoomHost') }}`, {
                 method: 'DELETE',
                 headers: {
