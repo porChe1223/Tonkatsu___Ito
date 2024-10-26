@@ -25,10 +25,10 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($participants as $participant)
+                @foreach(json_decode($room->member_list) as $member)
                 <tr class="card-number">
-                    <td>{{ $participant->name }}</td>
-                    <td>{{ $participant->card_number }}</td>
+                    <td>{{ $member->name }}</td>
+                    <td>{{ $member->card_number }}</td>
                 </tr>
                 @endforeach
             </tbody>
@@ -36,9 +36,13 @@
 
         <h2>あなたが入力した順番</h2>
         <ul>
-            @foreach ($player_order as $name)
-            <li>{{ $name }}</li>
-            @endforeach
+            @if(!empty($room->player_order))
+                @foreach (json_decode($room->player_order) as $name)
+                    <li>{{ $name }}</li>
+                @endforeach
+            @else
+                <li>順番が入力されていません</li>
+            @endif
         </ul>
 
         <form action="{{ route('removeRoomGuest', $room->id) }}" method="POST">

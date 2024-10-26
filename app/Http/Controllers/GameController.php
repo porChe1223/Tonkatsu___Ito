@@ -41,6 +41,9 @@ class GameController extends Controller
         }
 
         $players = $room->participants;
+        $room->member_list = $players->sortBy('card_number')->values()->toJson();// ゲームが始まったらメンバーリストを保存
+        // dd($room->member_list);
+        $room->save();
 
         return view('games.gameroom_host', ['room' => $room, 'user' => $user, 'choosed_Theme' => $choosed_Theme, 'players' => $players]);
     }
@@ -80,4 +83,14 @@ class GameController extends Controller
 
         return view('games.home', ['room' => $room])->with('message', 'ゲームを退出しました');
     }
+
+    // マッチングルームの状態を確認するAPI
+    public function checkGameroomStatus($roomId)
+    {
+        $room = Room::find($roomId);
+        $isFinish = $room->status == "finish"; // 揃ったかどうかを確認
+
+        return response()->json(['isFinish' => $isFinish]);
+    }
+
 }
