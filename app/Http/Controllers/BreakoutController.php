@@ -45,17 +45,19 @@ class BreakoutController extends Controller
 
         $participants = $room->participants; //部屋の参加者を取得
 
-        //カード番号選択
-        $user = Auth::user();
-
         $usedCardNumbers = $participants->pluck('card_number')->toArray(); // 使用済みのカード番号を取得（NULLを除外）
         
         do { // 使用されていないカード番号を見つける
             $choosed_CardNumber = rand(0, 100);
            } while (in_array($choosed_CardNumber, $usedCardNumbers));
 
-        $user->card_number = $choosed_CardNumber; // 選ばれたカード番号をデータベースに保存
-        $user->save();
+        //カード番号選択
+        $user = Auth::user();
+
+        if ($user instanceof \App\Models\User) {
+            $user->card_number = $choosed_CardNumber; // 選ばれたカード番号をデータベースに保存
+            $user->save();
+        }
 
         return view(
             'games.breakout_host',
@@ -106,17 +108,19 @@ class BreakoutController extends Controller
 
         $participants = $room->participants; //部屋の参加者を取得
 
-        //カード番号選択
-        $user = Auth::user();
-
         $usedCardNumbers = $participants->pluck('card_number')->toArray(); // 使用済みのカード番号を取得（NULLを除外）
         
         do { // 使用されていないカード番号を見つける
             $choosed_CardNumber = rand(0, 100);
            } while (in_array($choosed_CardNumber, $usedCardNumbers));
 
-        $user->card_number = $choosed_CardNumber; // 選ばれたカード番号をデータベースに保存
-        $user->save();
+        //カード番号選択
+        $user = Auth::user();
+
+        if ($user instanceof \App\Models\User) {
+            $user->card_number = $choosed_CardNumber; // 選ばれたカード番号をデータベースに保存
+            $user->save();
+        }
         
         //GameRoomへの遷移
         if ($room->participants()->count() == 2) { //揃ったら
