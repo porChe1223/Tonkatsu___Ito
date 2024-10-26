@@ -15,16 +15,34 @@
             </span>
         </h1>
         <p>他の参加者を待っています...</p>
-        <h1>参加者</h1>
-        @foreach($room->participants as $participant)
+        <p id="participant-title" >参加者</p>
+        @foreach($participants as $participant)
                     <li>{{ $participant['name']}}</li>
         @endforeach
 
+        <button id="startButton" style="display: none;">ゲーム開始</button>
     </div>
 </body>
 
 <script>
     let isAutoRedirect = false;
+
+    document.getElementById('startButton').addEventListener('click', function () {
+        fetch('/start-game/{{ $room->id }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}' // CSRFトークン
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log('Game started');
+            }
+        })
+        .catch(error => console.error('Error starting game:', error));
+    });
 
     setInterval(function(){
         // サーバーに部屋の状態を確認するリクエストを送る
@@ -36,13 +54,11 @@
                 return response.json();
             })
             .then(data => {
-                // 部屋が満員かどうかを確認
-                if (data.isFull) {
+                if (data.isReady) { // ゲームが始めれるかどうかを確認
                     isAutoRedirect = true;
-                    // 部屋が満員になったらプレイ画面にリダイレクト
-                    window.location.href = '/gameroom_host/{{ $room->id }}';
+                    document.getElementById('startButton').style.display = 'block';
                 } else {
-                    document.getElementById('participants').textContent = data.player_count; // 取得したプレイヤー数で更新
+                    getElementById('participants').textContent = data.participants; // 取得したプレイヤーを更新
                 }
             })
             .catch(error => {
