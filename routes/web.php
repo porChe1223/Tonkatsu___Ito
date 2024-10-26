@@ -35,6 +35,7 @@ Route::delete('/matching/remove', [MatchingController::class, 'removeMatchingRoo
 Route::post('/breakout_host', [BreakoutController::class, 'makeBreakoutRoom'])->name('makeBreakoutRoom'); //ブレイクアウトルームを作成
 Route::post('/breakout_guest', [BreakoutController::class, 'joinBreakoutRoom'])->name('joinBreakoutRoom'); //ブレイクアウトルームへ参加
 Route::get('/check-join-user/{room}', [BreakoutController::class, 'checkJoinUser']); //ブレイクアウトルームに参加しているユーザーを定期的に確認
+Route::post('/start-game/{roomId}', [BreakoutController::class, 'startGame'])->name('startGame'); //ホストがスタートボタンを押すとゲーム開始
 Route::delete('/breakout_host/remove', [BreakoutController::class, 'removeBreakoutRoom'])->name('removeBreakoutRoomHost'); //ホストがブレイクアウトルームを抜けた際自身の情報を部屋から削除
 Route::delete('/breakout_guest/remove', [BreakoutController::class, 'removeBreakoutRoom'])->name('removeBreakoutRoomGuest'); //ゲストがブレイクアウトルームを抜けた際自身の情報を部屋から削除
 
@@ -42,11 +43,16 @@ Route::delete('/breakout_guest/remove', [BreakoutController::class, 'removeBreak
 Route::get('/gameroom/{room}', [GameController::class, 'gameRoom'])->name('GameRoom'); //ゲームルームに入った際にお題と番号をランダム選択
 Route::get('/gameroom_host/{room}', [GameController::class, 'goGameRoomHost'])->name('goGameRoomHost'); //ホストがゲームルームに入った際にお題と番号をランダム選択
 Route::get('/gameroom_guest/{room}', [GameController::class, 'goGameRoomGuest'])->name('goGameRoomGuest'); //ゲストがゲームルームに入った際にお題と番号をランダム選択
-Route::post('/makingTheme', [ThemeController::class, 'store'])->name('MakeTheme'); //テーマ入力
-Route::post('/makingTheme/{room}', [ThemeController::class, 'store'])->name('MakeThemeInGame'); //新しいお題を作成
-Route::get('/get-current-theme/{room}', [ThemeController::class, 'getCurrentTheme']); //現在のお題を更新
 Route::delete('/gameroom_host/{room}/remove', [GameController::class, 'removeGameRoom'])->name('removeGameRoomHost'); //ホストがゲームルームを抜けた際自身の情報を部屋から削除
 Route::delete('/gameroom_guest/{room}/remove', [GameController::class, 'removeGameRoom'])->name('removeGameRoomGuest'); //ゲストがゲームルームを抜けた際自身の情報を部屋から削除
+//お題関係
+Route::post('/makingTheme', [ThemeController::class, 'store'])->name('MakeTheme'); //お題入力
+Route::post('/makingTheme/{room}', [ThemeController::class, 'store'])->name('MakeThemeInGame'); //新しいお題を作成
+Route::get('/get-current-theme/{room}', [ThemeController::class, 'getCurrentTheme']); //現在のお題を更新
+// チャット関係
+Route::get('/chat/{roomId}', [ChatController::class, 'index'])->middleware('auth')->name('chat.index'); // チャットルームの表示
+Route::get('/chat/{roomId}/messages', [ChatController::class, 'fetchMessages'])->middleware('auth')->name('chat.fetchMessages'); // メッセージの取得
+Route::post('/chat/{roomId}/messages', [ChatController::class, 'sendMessage'])->middleware('auth')->name('chat.sendMessage'); // メッセージの送信
 
 
 //結果画面関係
@@ -57,15 +63,5 @@ Route::get('/result_guest/{room}', [ResultController::class, 'showResultGuest'])
 Route::post('/result_guest/{room}', [ResultController::class, 'showResult'])->name('goResultRoom'); 
 Route::delete('/result_host/{room}/remove', [ResultController::class, 'removeResultRoom'])->name('removeRoomHost'); //指定されたルームを削除してダッシュボードへリダイレクト
 Route::delete('/result_guest/{room}/remove', [ResultController::class, 'removeResultRoom'])->name('removeRoomGuest'); //指定されたルームを削除してダッシュボードへリダイレクト
-
-// チャット関係
-// チャットルームの表示
-Route::get('/chat/{roomId}', [ChatController::class, 'index'])->middleware('auth')->name('chat.index');
-
-// メッセージの取得
-Route::get('/chat/{roomId}/messages', [ChatController::class, 'fetchMessages'])->middleware('auth')->name('chat.fetchMessages');
-
-// メッセージの送信
-Route::post('/chat/{roomId}/messages', [ChatController::class, 'sendMessage'])->middleware('auth')->name('chat.sendMessage');
 
 require __DIR__ . '/auth.php';
