@@ -45,6 +45,8 @@ Route::delete('/breakout_guest/remove', [BreakoutController::class, 'removeBreak
 Route::get('/gameroom/{room}', [GameController::class, 'gameRoom'])->name('GameRoom'); //ゲームルームに入った際にお題と番号をランダム選択
 Route::get('/gameroom_host/{room}', [GameController::class, 'goGameRoomHost'])->name('goGameRoomHost'); //ホストがゲームルームに入った際にお題と番号をランダム選択
 Route::get('/gameroom_guest/{room}', [GameController::class, 'goGameRoomGuest'])->name('goGameRoomGuest'); //ゲストがゲームルームに入った際にお題と番号をランダム選択
+Route::get('/check-gameroom-host/{room}', [BreakoutController::class, 'checkGameroomStatusHost']); //ブレイクアウトルームに参加しているユーザーを定期的に確認
+Route::get('/check-gameroom-status/{room}', [GameController::class, 'checkGameroomStatusGuest']); //gameroomが終了したかどうかを判定
 Route::delete('/gameroom_host/{room}/remove', [GameController::class, 'removeGameRoom'])->name('removeGameRoomHost'); //ホストがゲームルームを抜けた際自身の情報を部屋から削除
 Route::delete('/gameroom_guest/{room}/remove', [GameController::class, 'removeGameRoom'])->name('removeGameRoomGuest'); //ゲストがゲームルームを抜けた際自身の情報を部屋から削除
 //お題関係
@@ -58,7 +60,6 @@ Route::post('/chat/{roomId}/messages', [ChatController::class, 'sendMessage'])->
 
 
 //結果画面関係
-Route::get('/check-gameroom-status/{room}', [GameController::class, 'checkGameroomStatus']); //gameroomが終了したかどうかを判定
 Route::post('/result/{room}', [ResultController::class, 'showResult'])->name('goResultRoom'); //結果画面(host)へ遷移
 Route::post('/result_host/{room}', [ResultController::class, 'showResultHost'])->name('goResultRoomHost'); //結果画面(host)へ遷移
 Route::get('/result_guest/{room}', [ResultController::class, 'showResultGuest'])->name('goResultRoomGuest'); //結果画面(guest)へ遷移

@@ -32,7 +32,7 @@
             })
             .then(data => {
                 // 部屋が満員かどうかを確認
-                if (data.isFull) {
+                if (data.isStarted) {
                     isAutoRedirect = true;
                     // 部屋が満員になったらプレイ画面にリダイレクト
                     window.location.href = '/gameroom_host/{{ $room->id }}';
