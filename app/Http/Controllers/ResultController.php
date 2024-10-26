@@ -84,24 +84,43 @@ class ResultController extends Controller
     }
 
 
-    public function removeResultRoom(Room $room)
+    public function removeResultRoomHost(Room $room)
     {
-        $yourRoomUser = RoomUser::where('user_id', Auth::id())->first(); //自身が登録されているroom_userを取得
+        // 自身が登録されているroom_userを取得
+        $yourRoomUser = RoomUser::where('user_id', Auth::id())->first();
 
-        if ($yourRoomUser) {
-            $room = Room::find($yourRoomUser->room_id); // 自身が今入っているroomを取得
-
-            $yourRoomUser->delete(); // 自身が登録されているroom_userを削除
-
-            $room->player_count -= 1; // 部屋のプレイヤーを減らす
-            $room->save(); // DBに保存
-
-            // プレイヤーが0人になったら部屋を削除
-            if ($room->player_count <= 0) {
-                $room->delete();
-            }
+        // room_userが見つからない、またはroomが見つからない場合はすぐにgoHomeRoomにリダイレクト
+        if (!$yourRoomUser || !$room = Room::find($yourRoomUser->room_id)) {
+            return redirect()->route('goHomeRoom')->with('message', '部屋が見つかりませんでした');
         }
 
-        return view('games.home', ['room' => $room])->with('message', 'ゲームが終了しました');
+        // 自身が登録されているroom_userを削除
+        $yourRoomUser->delete();
+
+        // 部屋のプレイヤーを減らす
+        $room->player_count -= 1;
+        $room->save();
+
+        // プレイヤーが0人になったら部屋を削除
+        if ($room->player_count <= 0) {
+            $room->delete();
+        }
+
+        return redirect()->route('goHomeRoom')->with('message', 'ゲームが終了しました');
+    }
+
+    public function removeResultRoomGuest()
+    {
+        return redirect()->route('goHomeRoom');
+        return view('games.home')->with('message', 'ゲームが終了しました');
+    }
+
+    // マッチングルームの状態を確認するAPI
+    public function checkResultStatus($roomId)
+    {
+        $room = Room::find($roomId);
+        $isContinue = $room->status == "continue"; // コンテニューかチェック
+
+        return response()->json(['isContinue' => $isContinue]);
     }
 }
