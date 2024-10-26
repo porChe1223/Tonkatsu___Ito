@@ -50,9 +50,10 @@ Route::delete('/gameroom_guest/{room}/remove', [GameController::class, 'removeGa
 
 
 //結果画面関係
+Route::post('/result/{room}', [ResultController::class, 'showResult'])->name('goResultRoom'); //結果画面へ遷移
 Route::post('/result_host/{room}', [ResultController::class, 'showResult'])->name('goResultRoomHost'); //結果画面(host)へ遷移
 Route::post('/result_guest/{room}', [ResultController::class, 'showResult'])->name('goResultRoomGuest'); //結果画面(guest)へ遷移
-Route::post('/result_guest/{room}', [ResultController::class, 'showResult'])->name('goResultRoom'); 
+Route::delete('/result/{room}/remove', [ResultController::class, 'removeResultRoom'])->name('removeRoomGuest'); //指定されたルームを削除してダッシュボードへリダイレクト
 Route::delete('/result_host/{room}/remove', [ResultController::class, 'removeResultRoom'])->name('removeRoomHost'); //指定されたルームを削除してダッシュボードへリダイレクト
 Route::delete('/result_guest/{room}/remove', [ResultController::class, 'removeResultRoom'])->name('removeRoomGuest'); //指定されたルームを削除してダッシュボードへリダイレクト
 

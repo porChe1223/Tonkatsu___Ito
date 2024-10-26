@@ -76,7 +76,7 @@
     <!-- チャット機能のスクリプト -->
     <script>
         $(document).ready(function(){
-            const roomId = {{ $room->id }};
+            const roomId = '{{ $room->id }}';
             const chatBox = $('#chat-box');
             let lastFetched = null;
 
