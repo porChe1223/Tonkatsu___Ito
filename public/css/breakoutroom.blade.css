@@ -33,17 +33,26 @@ p {
     color: #6c757d;
 }
 
-.btn {
+#startButton {
     display: inline-block;
+    margin: 0 auto;
     padding: 10px 20px;
     font-size: 1em;
+    font-weight: bold;
     color: white;
-    background-color: #007bff;
+    background-color: #ffa200;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     text-decoration: none;
     transition: background-color 0.3s ease;
+}
+
+#participant-title {
+    font-size: 2.5em;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #ffa200;
 }
 
 .btn:hover {
