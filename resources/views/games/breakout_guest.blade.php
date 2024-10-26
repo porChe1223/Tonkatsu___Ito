@@ -1,20 +1,24 @@
 <!DOCTYPE html>
-<html lang="Ja">
-
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <title>マッチング画面</title>
-    <link rel="stylesheet" href="{{ asset('css/matching.blade.css') }}">
+    <title>ルーム待機画面</title>
+    <link rel="stylesheet" href="{{ asset('/css/breakoutroom.blade.css')}}">
 </head>
 
 <body>
     <div class="container">
-        <h1>マッチング中...</h1>
+        <h1>部屋番号:
+            <span id="room_id">
+                {{$room->id}}
+            </span>
+        </h1>
         <p>他の参加者を待っています...</p>
-        <span>{{$room->player_count}}</span>
-        <span> /4</span>
+        <p id="participant-title" >参加者</p>
+        @foreach($participants as $participant)
+                    <li>{{ $participant['name']}}</li>
+        @endforeach
     </div>
 </body>
 
@@ -23,7 +27,7 @@
 
     setInterval(function(){
         // サーバーに部屋の状態を確認するリクエストを送る
-        fetch('/check-room-status/{{ $room->id }}')
+        fetch('/check-join-user/{{ $room->id }}')
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Room not found');
@@ -31,13 +35,11 @@
                 return response.json();
             })
             .then(data => {
-                // 部屋が満員かどうかを確認
-                if (data.isFull) {
+                if (data.isStarted){ // ゲームがスタートしたらプレイ画面にリダイレクト
                     isAutoRedirect = true;
-                    // 部屋が満員になったらプレイ画面にリダイレクト
-                    window.location.href = '/gameroom_host/{{ $room->id }}';
+                    window.location.href = '/gameroom_guest/{{ $room->id }}';
                 } else {
-                    document.getElementById('participants').textContent = data.player_count; // 取得したプレイヤー数で更新
+                    getElementById('participants').textContent = data.participants; // 取得したプレイヤーを更新
                 }
             })
             .catch(error => {
@@ -46,8 +48,8 @@
     }, 500); // 1秒ごとにサーバーの状態を確認
 
     window.addEventListener('beforeunload', (event) => {
-        if (!isAutoRedirect && window.location.href !== ('/gameroom_host/{{ $room->id }}' || '/gameroom_guest/{{ $room->id }}')) {
-            fetch(`{{route('removeMatchingRoom')}}`, {
+        if (!isAutoRedirect && window.location.pathname !== `/gameroom_guest/{{ $room->id }}`) {
+            fetch(`{{ route('removeBreakoutRoomGuest') }}`, {
                 method: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}', // CSRFトークンをヘッダーに追加
@@ -68,5 +70,4 @@
         isAutoRedirect = false; // ページが読み込まれたら元に戻す
     });
 </script>
-
 </html>

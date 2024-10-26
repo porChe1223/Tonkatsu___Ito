@@ -11,72 +11,86 @@ use Illuminate\Support\Facades\Auth;
 
 class GameController extends Controller
 {
-    //マッチング画面
-    public function joinRoom()
+    public function gameRoom(Room $room, Theme $theme, User $user)
     {
-        // 既存の空き部屋を探す
-        $room = Room::where('status', 'waiting')->first();
-
-        if (!$room) {
-            // 新しい部屋を作成
-            $room = Room::create([
-                'status' => 'waiting'
-            ]);
-        }
-
-        // 部屋に参加者を追加
-        RoomUser::firstOrCreate([
-            'room_id' => $room->id,
-            'user_id' => Auth::id(),
-        ]);
-
-        // もし2人揃ったら、部屋のステータスを変更してgameroomにリダイレクト
-        if ($room->participants()->count() == 2) {
-            $room->update(['status' => 'full']);
-            return redirect()->route('games.gameroom', ['room' => $room->id]);
-        }
-
-        // 2人になるまで待機画面に移行
-        return view('games.matching', ['room' => $room]);
-    }
-    
-    
-
-    //ゲーム画面
-    // public function gameRoom(Room $room)
-    // {
-    //     return view('games.gameroom', ['room' => $room]);
-    // }
-
-    public function choose_Theme_CardNumber(){
-        // $room = Room::find(1);
         $user = Auth::user();
-
-        /* 
-            テーマを一回のみ選択させる
-        　　部屋ができないと検証できないためいったん隠す
-
-        if(is_null($room->theme_id)){ //テーマが選ばれていない（rooomsに入っていない）なら
-            //テーマをランダム選択
-            $choosed_Theme = Theme::inRandomOrder()->first();
+        //お題選択
+        if (is_null($room->theme_id)) { //お題が決まっていなければ
+            $choosed_Theme = Theme::inRandomOrder()->first();  //お題のランダム選択
             $room->theme_id = $choosed_Theme->id;
-            $room->save();
-        } else { // 既にテーマが決まっている場合
-            //roomsに入っているテーマを取得
-            $choosed_Theme = Theme::find($room->theme_id);
+            $room->save(); //DB更新
+        } else {
+            $choosed_Theme = Theme::find($room->theme_id); // roomsに入っているお題を取得
         }
 
-        */
+        $players = $room->participants;
 
-        $choosed_Theme = Theme::inRandomOrder()->first();
-
-        //カード番号をランダム選択
-        $choosed_CardNumber = rand(0, 100);
-
-        //選ばれたカード番号をデータベースに保存
-        $user->card_number = $choosed_CardNumber;
-        $user->save();
-
-        return view('games.gameroom', compact('user', 'choosed_Theme'));
+        return view('games.gameroom', ['room' => $room, 'user' => $user, 'choosed_Theme' => $choosed_Theme, 'players' => $players]);
     }
+
+    public function goGameRoomHost(Room $room, Theme $theme, User $user)
+    {
+        $user = Auth::user();
+        //お題選択
+        if (is_null($room->theme_id)) { //お題が決まっていなければ
+            $choosed_Theme = Theme::inRandomOrder()->first();  //お題のランダム選択
+            $room->theme_id = $choosed_Theme->id;
+            $room->save(); //DB更新
+        } else {
+            $choosed_Theme = Theme::find($room->theme_id); // roomsに入っているお題を取得
+        }
+
+        $players = $room->participants;
+        $room->member_list = $players->sortBy('card_number')->values()->toJson();// ゲームが始まったらメンバーリストを保存
+        // dd($room->member_list);
+        $room->save();
+
+        return view('games.gameroom_host', ['room' => $room, 'user' => $user, 'choosed_Theme' => $choosed_Theme, 'players' => $players]);
+    }
+
+    public function goGameRoomGuest(Room $room, Theme $theme, User $user)
+    {
+        $user = Auth::user();
+        //お題選択
+        if (is_null($room->theme_id)) { //お題が決まっていなければ
+            $choosed_Theme = Theme::inRandomOrder()->first();  //お題のランダム選択
+            $room->theme_id = $choosed_Theme->id;
+            $room->save(); //DB更新
+        } else {
+            $choosed_Theme = Theme::find($room->theme_id); // roomsに入っているお題を取得
+        }
+
+        $players = $room->participants;
+
+        return view('games.gameroom_guest', ['room' => $room, 'user' => $user, 'choosed_Theme' => $choosed_Theme, 'players' => $players]);
+    }
+
+    public function removeGameRoom(Room $room)
+    {
+        while($yourRoomUser = RoomUser::where('user_id', Auth::id())->first()){ //自身が登録されているroom_userがある限り
+            $room = Room::find($yourRoomUser->room_id); // 自身が今入っているroomを取得
+
+            $yourRoomUser->delete(); // 自身が登録されているroom_userを削除
+
+            $room->player_count -= 1; // 部屋のプレイヤーを減らす
+            $room->save(); // DBに保存
+
+            // プレイヤーが0人になったら部屋を削除
+            if ($room->player_count <= 0) {
+                $room->delete();
+            }
+        }
+
+        return view('games.home', ['room' => $room])->with('message', 'ゲームを退出しました');
+    }
+
+    // マッチングルームの状態を確認するAPI
+    public function checkGameroomStatus($roomId)
+    {
+        $room = Room::find($roomId);
+        $isFinish = $room->status == "finish"; // 揃ったかどうかを確認
+
+        return response()->json(['isFinish' => $isFinish]);
+    }
+
 }
