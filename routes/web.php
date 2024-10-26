@@ -24,7 +24,9 @@ Route::get('/', function () {
 }); //画面表示
 
 //ホーム画面
-Route::get('/home', function () { return view('games.home'); })->middleware(['auth', 'verified'])->name('goHomeRoom'); //ユーザ認証からの画面表示
+Route::get('/home', function () {
+    return view('games.home');
+})->middleware(['auth', 'verified'])->name('goHomeRoom'); //ユーザ認証からの画面表示
 
 //マッチングルーム関係
 Route::post('/matching', [MatchingController::class, 'goMatchingRoom'])->name('goMatchingRoom'); //マッチング画面へ遷移
@@ -60,7 +62,7 @@ Route::get('/check-gameroom-status/{room}', [GameController::class, 'checkGamero
 Route::post('/result/{room}', [ResultController::class, 'showResult'])->name('goResultRoom'); //結果画面(host)へ遷移
 Route::post('/result_host/{room}', [ResultController::class, 'showResultHost'])->name('goResultRoomHost'); //結果画面(host)へ遷移
 Route::get('/result_guest/{room}', [ResultController::class, 'showResultGuest'])->name('goResultRoomGuest'); //結果画面(guest)へ遷移
-Route::post('/result_guest/{room}', [ResultController::class, 'showResult'])->name('goResultRoom'); 
+Route::post('/result_guest/{room}', [ResultController::class, 'showResult'])->name('goResultRoom');
 Route::delete('/result_host/{room}/remove', [ResultController::class, 'removeResultRoomHost'])->name('removeRoomHost'); //指定されたルームを削除してダッシュボードへリダイレクト
 Route::delete('/result_guest/{room}/remove', [ResultController::class, 'removeResultRoomGuest'])->name('removeRoomGuest'); //指定されたルームを削除してダッシュボードへリダイレクト
 //結果画面関係
