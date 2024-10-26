@@ -55,6 +55,7 @@
             })
             .then(data => {
                 if (data.isStarted){ // ゲームがスタートしたらプレイ画面にリダイレクト
+                    isAutoRedirect = true;
                     window.location.href = '/gameroom_host/{{ $room->id }}';
                 } else if (data.isReady) { // ゲームが始めれるかどうかを確認
                     isAutoRedirect = true;
