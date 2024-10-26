@@ -57,14 +57,22 @@ class BreakoutController extends Controller
         $user->card_number = $choosed_CardNumber; // 選ばれたカード番号をデータベースに保存
         $user->save();
 
-        //GameRoomへの遷移
-        if ($room->player_count == 3) { //揃ったら
-            $room->update(['status' => 'full']); //部屋のステータスを変更
-            
-            return redirect()->route('goGameRoomHost', ['room' => $room]); //gameroom(host)に遷移・部屋番号を返す
-        }
+        return view(
+            'games.breakout_host',
+            [
+                'room' => $room,
+                'participants' => $room->participants,
+                'showStartButton' => $room->player_count >= 2 // 揃うまで待機
+            ]
+        );
+    }
 
-        return view('games.breakout_host', ['room' => $room]); // 揃うまで待機
+    // スタートボタンでルームのステータスを更新
+    public function startGame($roomId)
+    {
+        $room = Room::find($roomId);
+        $room->update(['status' => 'start']); // ステータスをstartに変更
+        return response()->json(['success' => true]);
     }
 
     //部屋番号を入力してブレイクアウトルームに参加画面by米田
@@ -111,13 +119,15 @@ class BreakoutController extends Controller
         $user->save();
         
         //GameRoomへの遷移
-        if ($room->participants()->count() == 3) { //揃ったら
-            $room->update(['status' => 'full']); //部屋のステータスを変更
-            
+        if ($room->participants()->count() == 2) { //揃ったら
+            $room->update(['status' => 'ready']); //部屋のステータスを変更
+        }
+
+        if ($room->status == 'start') {
             return redirect()->route('goGameRoomGuest', ['room' => $room]); //gameroom(guest)に遷移
         }
 
-        return view('games.breakout_guest', ['room' => $room]); // 揃うまで待機
+        return view('games.breakout_guest', ['room' => $room, 'participants' => $participants]); // 揃うまで待機
     }
 
     // ブレイクアウトルームに参加しているユーザーと人数を確認by米田
@@ -125,9 +135,11 @@ class BreakoutController extends Controller
     {
         $room = Room::find($roomId);
 
-        $isFull = $room->participants()->count() == 3;
+        $isReady = $room->participants()->count() == 2;
 
-        return response()->json(['isFull' => $isFull, 'player_count' => $room->player_count, 'participants' => $room->participants]);
+        $participants = $room->participants; //部屋の参加者を取得
+
+        return response()->json(['isReady' => $isReady, 'isStarted' => $room->status === 'start', 'player_count' => $room->player_count, 'participants' => $participants]);
     }
 
     //ブレイクアウトルームを抜けたら自分の情報を消す
