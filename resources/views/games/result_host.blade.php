@@ -53,7 +53,7 @@
 let isAutoRedirect = false;
 
 window.addEventListener('beforeunload', (event) => {
-    if (!isAutoRedirect) {
+    if (!isAutoRedirect && window.location.href !== '/home/{{ $room->id }}') {
         fetch(`{{ route('removeGameRoomHost', ['room' => $room->id]) }}`, {
             method: 'DELETE',
             headers: {

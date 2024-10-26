@@ -9,39 +9,6 @@ use Illuminate\Http\Request;
 
 class ResultController extends Controller
 {
-    //結果画面
-    // public function showResult($room_id, Request $request)
-    // {
-    //     $room = Room::findOrFail($room_id); //みんなのカード番号とそのユーザー情報を取得
-
-    //     $room->update(['status' => 'finish']); //部屋のステータスを変更
-
-    //     $participants = $room->participants->sortBy('card_number'); //Roomモデル内のparticipantsを使用して参加者の一覧を取得
-
-    //     // Host側ではフォームからの入力を取得し、Guest側では空配列をデフォルトとする
-    //     $player_order = $request->input('answer',[]); //プレイヤーの順番（送信された順番）
-
-    //     // Hostの場合、`player_order`をデータベースに保存
-    //     if (!empty($player_order)) {
-    //         $room->update(['player_order' => json_encode($player_order)]);
-    //     }
-
-    //     $correct_order = $participants->pluck('name')->toArray(); //正しい順番（カード番号順で並べたプレイヤー名）
-
-    //     // Host側のみで順番を判定
-    //     $isCorrect = count($player_order) > 0 ? $player_order === $correct_order : null;
-
-    //     return view(
-    //         'games.result_host',
-    //         [
-    //             'isCorrect' => $isCorrect,
-    //             'correct_order' => $correct_order,
-    //             'player_order' => $player_order,
-    //         ],
-    //         compact('room', 'participants')
-    //     );
-    // }
-
     // 結果画面（Host / Guest 両方に対応）
     public function showResult($room_id, Request $request, $isHost = false)
     {
@@ -111,7 +78,6 @@ class ResultController extends Controller
 
     public function removeResultRoomGuest()
     {
-        return redirect()->route('goHomeRoom');
         return view('games.home')->with('message', 'ゲームが終了しました');
     }
 
