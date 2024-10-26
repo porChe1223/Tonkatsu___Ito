@@ -15,8 +15,8 @@
             </span>
         </h1>
         <p>他の参加者を待っています...</p>
-        <h1>参加者</h1>
-        @foreach($room->participants as $participant)
+        <p id="participant-title" >参加者</p>
+        @foreach($participants as $participant)
                     <li>{{ $participant['name']}}</li>
         @endforeach
     </div>
@@ -35,13 +35,11 @@
                 return response.json();
             })
             .then(data => {
-                // 部屋が満員かどうかを確認
-                if (data.isFull) {
+                if (data.isStarted){ // ゲームがスタートしたらプレイ画面にリダイレクト
                     isAutoRedirect = true;
-                    // 部屋が満員になったらプレイ画面にリダイレクト
                     window.location.href = '/gameroom_guest/{{ $room->id }}';
                 } else {
-                    document.getElementById('participants').textContent = data.player_count; // 取得したプレイヤー数で更新
+                    getElementById('participants').textContent = data.participants; // 取得したプレイヤーを更新
                 }
             })
             .catch(error => {
