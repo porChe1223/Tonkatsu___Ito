@@ -94,7 +94,7 @@
 
     setInterval(function(){
         // サーバーに部屋の状態を確認するリクエストを送る
-        fetch('/check-join-user/{{ $room->id }}')
+        fetch('/check-gameroom-host/{{ $room->id }}')
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Room not found');
@@ -102,8 +102,8 @@
                 return response.json();
             })
             .then(data => {
-                // 部屋が満員かどうかを確認
-                if (data.isFinished) {
+                // ゲームが終わったかどうかを確認
+                if (data.isStarted) {
                     isAutoRedirect = true;
                     // 部屋が終了になったらリザルト画面（ゲスト）にリダイレクト
                     window.location.href = '/result_host/{{ $room->id }}';
@@ -130,10 +130,6 @@
                 console.error('Error:', error);
             });
         }
-    });
-
-    window.addEventListener('load', () => {
-        isAutoRedirect = false; // ページが読み込まれたら元に戻す
     });
 
     //チャット機能
@@ -220,6 +216,10 @@
             const date = new Date(timestamp);
             return date.toLocaleString();
         }
+    });
+
+    window.addEventListener('load', () => {
+        isAutoRedirect = false; // ページが読み込まれたら元に戻す
     });
 </script>
 

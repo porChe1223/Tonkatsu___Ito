@@ -46,6 +46,8 @@
 </body>
 
 <script>
+    let isAutoRedirect = false;
+
     //ホストのページ遷移時の部屋情報処理ができていない
     $(document).ready(function() {
         // 1秒ごとにサーバーからお題を取得して更新
@@ -104,10 +106,6 @@
                 console.error('Error:', error);
             });
         }
-    });
-
-    window.addEventListener('load', () => {
-        isAutoRedirect = false; // ページが読み込まれたら元に戻す
     });
 
     //チャット機能
@@ -196,7 +194,9 @@
         }
     });
 
-
+    window.addEventListener('load', () => {
+        isAutoRedirect = false; // ページが読み込まれたら元に戻す
+    });
 </script>
 
     <!-- 必要なJavaScriptライブラリの読み込み -->

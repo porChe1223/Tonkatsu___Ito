@@ -61,7 +61,7 @@ class MatchingController extends Controller
 
             //GameRoomへの遷移
             if ($room->participants()->count() == 2) { //揃ったら
-                $room->update(['status' => 'full']); //部屋のステータスを変更
+                $room->update(['status' => 'start']); //部屋のステータスを変更
 
                 return redirect()->route('goGameRoomHost', ['room' => $room]); //gameroomに遷移・部屋番号を返す
             }
@@ -94,7 +94,7 @@ class MatchingController extends Controller
 
             //GameRoomへの遷移
             if ($room->participants()->count() == 2) { //揃ったら
-                $room->update(['status' => 'full']); //部屋のステータスを変更
+                $room->update(['status' => 'start']); //部屋のステータスを変更
 
                 return redirect()->route('goGameRoomGuest', ['room' => $room]); //gameroomに遷移・部屋番号を返す
             }
@@ -107,9 +107,9 @@ class MatchingController extends Controller
     {
         $room = Room::find($roomId);
 
-        $isFull = $room->participants()->count() == 2; // 揃ったかどうかを確認
+        $isStarted = $room->participants()->count() == 2; // 揃ったかどうかを確認
 
-        return response()->json(['isFull' => $isFull, 'player_count' => $room->player_count]);
+        return response()->json(['isStarted' => $isStarted, 'player_count' => $room->player_count]);
     }
 
     //マッチングルームを抜けたら自分の情報を消す
