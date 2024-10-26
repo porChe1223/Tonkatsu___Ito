@@ -54,8 +54,10 @@ class MatchingController extends Controller
                 $choosed_CardNumber = rand(0, 100);
             } while (in_array($choosed_CardNumber, $usedCardNumbers));
 
-            $user->card_number = $choosed_CardNumber; // 選ばれたカード番号をデータベースに保存
-            $user->save();
+            if ($user instanceof \App\Models\User) {
+                $user->card_number = $choosed_CardNumber; // 選ばれたカード番号をデータベースに保存
+                $user->save();
+            }
 
             //GameRoomへの遷移
             if ($room->participants()->count() == 2) { //揃ったら
@@ -85,9 +87,10 @@ class MatchingController extends Controller
                 $choosed_CardNumber = rand(0, 100);
             } while (in_array($choosed_CardNumber, $usedCardNumbers));
 
-
-            $user->card_number = $choosed_CardNumber; // 選ばれたカード番号をデータベースに保存
-            $user->save();
+            if ($user instanceof \App\Models\User) {
+                $user->card_number = $choosed_CardNumber; // 選ばれたカード番号をデータベースに保存
+                $user->save();
+            }
 
             //GameRoomへの遷移
             if ($room->participants()->count() == 2) { //揃ったら
