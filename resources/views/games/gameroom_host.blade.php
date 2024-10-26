@@ -70,6 +70,8 @@
 </body>
 
 <script>
+    let isAutoRedirect = false;
+
     //ホストのページ遷移時の部屋情報処理ができていない
     $(document).ready(function() {
         // 1秒ごとにサーバーからお題を取得して更新
@@ -101,10 +103,10 @@
             })
             .then(data => {
                 // 部屋が満員かどうかを確認
-                if (data.isFull) {
+                if (data.isFinished) {
                     isAutoRedirect = true;
-                } else {
-                    document.getElementById('participants').textContent = data.player_count; // 取得したプレイヤー数で更新
+                    // 部屋が終了になったらリザルト画面（ゲスト）にリダイレクト
+                    window.location.href = '/result_host/{{ $room->id }}';
                 }
             })
             .catch(error => {
@@ -128,6 +130,10 @@
                 console.error('Error:', error);
             });
         }
+    });
+
+    window.addEventListener('load', () => {
+        isAutoRedirect = false; // ページが読み込まれたら元に戻す
     });
 
     //チャット機能
