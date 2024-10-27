@@ -109,7 +109,15 @@ class MatchingController extends Controller
 
         $isStarted = $room->participants()->count() == 2; // 揃ったかどうかを確認
 
-        return response()->json(['isStarted' => $isStarted, 'player_count' => $room->player_count]);
+        return response()->json(['isStarted' => $isStarted);
+    }
+
+    public function countPlayers($roomId){
+        $room = Room::find($roomId);
+
+        $player_count = $room->player_count;
+
+        return response()->json(['player_count' => $player_count]);
     }
 
     //マッチングルームを抜けたら自分の情報を消す

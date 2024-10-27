@@ -69,6 +69,25 @@
             });
     }, 500); // 1秒ごとにサーバーの状態を確認
 
+    $(document).ready(function() {
+        // 1秒ごとにサーバーからお題を取得して更新
+        setInterval(function() {
+            let roomId = "{{ $room->id }}"; // 部屋のIDをBladeテンプレートから取得
+
+            $.ajax({
+                url: "/count-participants/" + roomId, // お題取得用のルート
+                type: "GET",
+                success: function(response) {
+                    // サーバーから取得したお題で表示を更新
+                    $('#participants').text(response.participants);
+                },
+                error: function(xhr) {
+                    console.log("お題の取得に失敗しました。");
+                }
+            });
+        }, 500); // 1秒ごとに実行
+    });
+
     window.addEventListener('beforeunload', (event) => {
         if (!isAutoRedirect && window.location.pathname !== `/result_host/{{ $room->id }}`) {
             fetch(`{{ route('removeBreakoutRoomHost') }}`, {

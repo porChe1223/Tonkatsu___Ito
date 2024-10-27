@@ -144,7 +144,15 @@ class BreakoutController extends Controller
 
         $participants = $room->participants; //部屋の参加者を取得
 
-        return response()->json(['isReady' => $isReady, 'isStarted' => $isStarted, 'player_count' => $room->player_count, 'participants' => $participants]);
+        return response()->json(['isReady' => $isReady, 'isStarted' => $isStarted]);
+    }
+
+    public function countParticipants($roomId){
+        $room = Room::find($roomId);
+
+        $participants = $room->participants;
+
+        return response()->json(['participants' => $participants]);
     }
 
     //ブレイクアウトルームを抜けたら自分の情報を消す

@@ -19,24 +19,22 @@ Route::middleware('auth')->group(function () {
 });
 
 //ララベル画面
-Route::get('/', function () {
-    return view('welcome');
-}); //画面表示
+Route::get('/', function () { return view('welcome');}); //画面表示
 
 //ホーム画面
-Route::get('/home', function () {
-    return view('games.home');
-})->middleware(['auth', 'verified'])->name('goHomeRoom'); //ユーザ認証からの画面表示
+Route::get('/home', function () { return view('games.home');})->middleware(['auth', 'verified'])->name('goHomeRoom'); //ユーザ認証からの画面表示
 
 //マッチングルーム関係
 Route::post('/matching', [MatchingController::class, 'goMatchingRoom'])->name('goMatchingRoom'); //マッチング画面へ遷移
 Route::get('/check-room-status/{room}', [MatchingController::class, 'checkMatchingStatus']); //人数が揃えばゲーム画面へ遷移・人数が揃わなければ待機
+Route::get('/count-players/{room}', [MatchingController::class, 'countPlayers']); //マッチングルームに参加している人数を定期的に確認
 Route::delete('/matching/remove', [MatchingController::class, 'removeMatchingRoom'])->name('removeMatchingRoom'); //マッチングルームを抜けた際自身の情報を部屋から削除
 
 //ブレイクアウトルーム関係
 Route::post('/breakout_host', [BreakoutController::class, 'makeBreakoutRoom'])->name('makeBreakoutRoom'); //ブレイクアウトルームを作成
 Route::post('/breakout_guest', [BreakoutController::class, 'joinBreakoutRoom'])->name('joinBreakoutRoom'); //ブレイクアウトルームへ参加
-Route::get('/check-join-user/{room}', [BreakoutController::class, 'checkJoinUser']); //ブレイクアウトルームに参加しているユーザーを定期的に確認
+Route::get('/check-join-user/{room}', [BreakoutController::class, 'checkJoinUser']); //ブレイクアウトルームが開始可能かを定期的に確認
+Route::get('/count-participants/{room}', [BreakoutController::class, 'countParticipants']); //ブレイクアウトルームに参加しているユーザーを定期的に確認
 Route::post('/start-game/{roomId}', [BreakoutController::class, 'startGame'])->name('startGame'); //ホストがスタートボタンを押すとゲーム開始
 Route::delete('/breakout_host/remove', [BreakoutController::class, 'removeBreakoutRoom'])->name('removeBreakoutRoomHost'); //ホストがブレイクアウトルームを抜けた際自身の情報を部屋から削除
 Route::delete('/breakout_guest/remove', [BreakoutController::class, 'removeBreakoutRoom'])->name('removeBreakoutRoomGuest'); //ゲストがブレイクアウトルームを抜けた際自身の情報を部屋から削除

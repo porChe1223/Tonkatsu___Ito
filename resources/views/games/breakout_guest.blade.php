@@ -47,6 +47,23 @@
             });
     }, 500); // 1秒ごとにサーバーの状態を確認
 
+    setInterval(function(){
+        // サーバーに部屋の状態を確認するリクエストを送る
+        fetch('/count-participants/{{ $room->id }}')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Room not found');
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('participants').textContent = data.participants; // 取得したプレイヤー数で更新
+            })
+            .catch(error => {
+                console.error('Error fetching room status:', error);
+            });
+    }, 500); // 1秒ごとにサーバーの状態を確認
+
     window.addEventListener('beforeunload', (event) => {
         if (!isAutoRedirect && window.location.pathname !== `/gameroom_guest/{{ $room->id }}`) {
             fetch(`{{ route('removeBreakoutRoomGuest') }}`, {
