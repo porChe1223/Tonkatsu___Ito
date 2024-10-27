@@ -23,20 +23,25 @@
 -   ./vendor/bin/sail php artisan db:seed --class=UserSeeder
 -   ./vendor/bin/sail php artisan db:seed --class=ThemeSeeder
 
+# 図解
+
+-   public/images に記載
+
 #　開発の手順
 
 -   git switch develop
 -   git pull origin develop
 -   git switch -c '新しいブランチ名'　 ← 　命名ルールは feat/~
-    すでに作ってるブランチに遷移するときは
-    git switch '自分のブランチ名'
-    --作成を開始する--
+-   すでに作ってるブランチに遷移するときは
+-   git switch '自分のブランチ名'
+
+## 作成を開始する
+
 -   git add '変更したファイル名'
 -   git commit -m '何をしたか詳細にコメント'
 -   git push origin '新しいブランチ名'
 -   gitHub 上の pull request から develop ← '新しいブランチ名'にプルリクエストを送る
-    最後李が確認して結合します！
 
 ## 作業が終わったらドッカーは閉じて！
 
-./vendor/bin/sail down
+-   ./vendor/bin/sail down
