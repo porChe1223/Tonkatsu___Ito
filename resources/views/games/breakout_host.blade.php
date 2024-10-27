@@ -16,9 +16,9 @@
         </h1>
         <p>他の参加者を待っています...</p>
         <p id="participant-title" >参加者</p>
-        @foreach($participants as $participant)
-                    <li>{{ $participant['name']}}</li>
-        @endforeach
+            @foreach($participants as $participant)
+                        <li>{{ $participant['name']}}</li>
+            @endforeach
 
         <button id="startButton" style="display: none;">ゲーム開始</button>
     </div>
@@ -70,19 +70,27 @@
     }, 500); // 1秒ごとにサーバーの状態を確認
 
     $(document).ready(function() {
-        // 1秒ごとにサーバーからお題を取得して更新
+        // 1秒ごとにサーバーから参加者リストを取得して更新
         setInterval(function() {
             let roomId = "{{ $room->id }}"; // 部屋のIDをBladeテンプレートから取得
 
             $.ajax({
-                url: "/count-participants/" + roomId, // お題取得用のルート
+                url: "/count-participants/" + roomId, // リスト取得用のルート
                 type: "GET",
                 success: function(response) {
-                    // サーバーから取得したお題で表示を更新
-                    $('#participants').text(response.participants);
+                    // 取得した参加者リストで表示を更新
+                    let participantsList = '';
+                    if (response.participants && response.participants.length > 0) {
+                        response.participants.forEach(function(participant) {
+                            participantsList += `<li>${participant.name}</li>`;
+                        });
+                    } else {
+                        participantsList = '<li>参加者がいません</li>';
+                    }
+                    $('#participants').html(participantsList); // リストを更新
                 },
                 error: function(xhr) {
-                    console.log("お題の取得に失敗しました。");
+                    console.log("参加者の取得に失敗しました。");
                 }
             });
         }, 500); // 1秒ごとに実行
